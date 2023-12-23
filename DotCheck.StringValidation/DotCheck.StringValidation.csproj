@@ -6,7 +6,7 @@
         <Nullable>enable</Nullable>
         <Title>DotCheck.StringValidation</Title>
         <Authors>Md. Redwan Hossain</Authors>
-        <Copyright>Md. Redwan Hossain</Copyright>
+        <Copyright>Copyright (c) Md. Redwan Hossain</Copyright>
         <Description>DotCheck.StringValidation offers a collection of valuable extension methods designed for the C# string type, complemented by their corresponding data annotations. These extensions provide enhanced functionality for string validation in C# applications.</Description>
         <PackageProjectUrl>https://github.com/md-redwan-hossain/DotCheck</PackageProjectUrl>
         <PackageLicenseUrl>https://github.com/md-redwan-hossain/DotCheck/blob/main/LICENSE</PackageLicenseUrl>

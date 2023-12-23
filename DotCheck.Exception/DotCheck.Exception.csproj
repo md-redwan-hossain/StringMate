@@ -4,6 +4,12 @@
         <TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <Title>DotCheck.Exception</Title>
+        <Description>DotCheck.Exception serves as a crucial dependency for all DotCheck projects, enhancing the handling of exceptions and providing more insightful information when errors occur.</Description>
+        <PackageProjectUrl>https://github.com/md-redwan-hossain/DotCheck</PackageProjectUrl>
+        <PackageLicenseUrl>https://github.com/md-redwan-hossain/DotCheck/blob/main/LICENSE</PackageLicenseUrl>
+        <RepositoryUrl>https://github.com/md-redwan-hossain/DotCheck</RepositoryUrl>
+        <Copyright>Copyright (c) Md. Redwan Hossain</Copyright>
     </PropertyGroup>
 
 </Project>
