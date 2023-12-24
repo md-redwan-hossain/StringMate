@@ -1,10 +1,17 @@
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using DotCheck.StringValidation.CoreValidators;
 
 namespace DotCheck.StringValidation.DataAnnotations;
 
 public class TimeAttribute : ValidationAttribute
 {
+    public TimeAttribute()
+    {
+        UseSecond = false;
+        Use24HourClock = false;
+    }
+
     public TimeAttribute(bool use24HourClock, bool useSecond)
     {
         UseSecond = useSecond;
@@ -14,10 +21,9 @@ public class TimeAttribute : ValidationAttribute
     private bool Use24HourClock { get; init; }
     private bool UseSecond { get; init; }
 
-    protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
-    {
-        return new TimeValidation().Validate(value, Use24HourClock, UseSecond)
-            ? ValidationResult.Success
-            : new ValidationResult($"The {validationContext.DisplayName} field is not a valid time.");
-    }
+    public override bool IsValid(object? value) =>
+        new TimeValidation().Validate(value, Use24HourClock, UseSecond);
+
+    public override string FormatErrorMessage(string name) =>
+        string.Format(CultureInfo.CurrentCulture, "The field is not a valid time.");
 }
