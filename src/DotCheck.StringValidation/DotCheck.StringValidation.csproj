@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <Title>DotCheck.StringValidation</Title>
+        <Authors>Md. Redwan Hossain</Authors>
+        <Copyright>Copyright (c) Md. Redwan Hossain</Copyright>
+        <Description>DotCheck.StringValidation offers a collection of valuable extension methods designed for the C# string type, complemented by their corresponding data annotations. These extensions provide enhanced functionality for string validation in C# applications.</Description>
+        <PackageProjectUrl>https://github.com/md-redwan-hossain/DotCheck</PackageProjectUrl>
+        <PackageLicenseUrl>https://github.com/md-redwan-hossain/DotCheck/blob/main/LICENSE</PackageLicenseUrl>
+        <RepositoryUrl>https://github.com/md-redwan-hossain/DotCheck</RepositoryUrl>
+        <Version>1.0.2</Version>
+        <PackageIcon>logo.png</PackageIcon>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\DotCheck.Exception\DotCheck.Exception.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Include="..\..\logo.png">
+        <Pack>True</Pack>
+        <PackagePath></PackagePath>
+        <Link>logo.png</Link>
+      </None>
+    </ItemGroup>
+
+
+</Project>

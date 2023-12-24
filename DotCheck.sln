@@ -1,10 +1,10 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotCheck.StringValidation", "DotCheck.StringValidation\DotCheck.StringValidation.csproj", "{8A490528-F010-4DA6-B778-15D8A6C9E4B3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotCheck.StringValidation", "src\DotCheck.StringValidation\DotCheck.StringValidation.csproj", "{8A490528-F010-4DA6-B778-15D8A6C9E4B3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotCheck.Exception", "DotCheck.Exception\DotCheck.Exception.csproj", "{DD872EF6-A35A-450F-B93A-17A6699C6660}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotCheck.Exception", "src\DotCheck.Exception\DotCheck.Exception.csproj", "{DD872EF6-A35A-450F-B93A-17A6699C6660}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotCheck.Test", "DotCheck.Test\DotCheck.Test.csproj", "{AC3D14A4-E241-4B63-B470-F1B6C4FE4645}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotCheck.Test", "src\DotCheck.Test\DotCheck.Test.csproj", "{AC3D14A4-E241-4B63-B470-F1B6C4FE4645}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
