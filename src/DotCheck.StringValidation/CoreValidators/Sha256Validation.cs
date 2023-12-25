@@ -1,12 +1,10 @@
-using System.Text.RegularExpressions;
+using DotCheck.StringValidation.CoreValidators.Abstracts;
 using DotCheck.StringValidation.Utils;
 
 namespace DotCheck.StringValidation.CoreValidators;
 
-public class Sha256Validation : IValidation
+public class Sha256Validation : HashValidation, IValidation
 {
-    private static readonly Regex Sha256Regex = new("^[a-fA-F0-9]{64}$");
-
     public bool Validate(object? value) =>
         Sha256Regex.IsMatch(Transformation.MakeValidString(value));
 }

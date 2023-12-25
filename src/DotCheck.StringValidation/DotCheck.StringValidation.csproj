@@ -13,6 +13,7 @@
         <RepositoryUrl>https://github.com/md-redwan-hossain/DotCheck</RepositoryUrl>
         <Version>1.0.3</Version>
         <PackageIcon>logo.png</PackageIcon>
+        <PackageTags>validation validation-library validator</PackageTags>
     </PropertyGroup>
 
     <ItemGroup>
