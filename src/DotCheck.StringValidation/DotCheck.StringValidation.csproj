@@ -14,6 +14,7 @@
         <Version>1.0.3</Version>
         <PackageIcon>logo.png</PackageIcon>
         <PackageTags>validation validation-library validator</PackageTags>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
 
     <ItemGroup>
@@ -21,12 +22,16 @@
     </ItemGroup>
 
     <ItemGroup>
-      <None Include="..\..\logo.png">
-        <Pack>True</Pack>
-        <PackagePath></PackagePath>
-        <Link>logo.png</Link>
-      </None>
+        <None Include="..\..\logo.png">
+            <Pack>True</Pack>
+            <Link>logo.png</Link>
+        </None>
     </ItemGroup>
 
-
+    <ItemGroup>
+        <None Include="..\..\README.md">
+            <Pack>True</Pack>
+            <Link>README.md</Link>
+        </None>
+    </ItemGroup>
 </Project>

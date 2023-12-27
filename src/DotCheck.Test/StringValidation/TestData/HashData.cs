@@ -1,6 +1,6 @@
 namespace DotCheck.Test.StringValidation.TestData;
 
-public static class HashAlgorithmData
+public static class HashData
 {
     public static readonly string[] ValidMd5 =
     {

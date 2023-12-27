@@ -1,13 +1,19 @@
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using DotCheck.StringValidation.CoreValidators;
+using DotCheck.StringValidation.CoreValidators.Enums;
 
 namespace DotCheck.StringValidation.DataAnnotations;
 
-public class Md5Attribute : ValidationAttribute
+public class HashAttribute : ValidationAttribute
 {
+    public HashAttribute(HashingAlgorithm algorithm) => 
+        _algorithm = algorithm;
+
+    private readonly HashingAlgorithm _algorithm;
+    
     public override bool IsValid(object? value) =>
-        new Md5Validation().Validate(value);
+        new HashValidation().Validate(value, _algorithm);
 
     public override string FormatErrorMessage(string name) =>
         string.Format(CultureInfo.CurrentCulture, "The field is not a valid md5 hash.");

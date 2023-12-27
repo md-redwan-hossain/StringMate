@@ -1,4 +1,4 @@
-namespace DotCheck.StringValidation.CoreValidators;
+namespace DotCheck.StringValidation.CoreValidators.Interfaces;
 
 public interface IValidation
 {

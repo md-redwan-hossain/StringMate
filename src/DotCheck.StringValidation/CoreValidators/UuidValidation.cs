@@ -1,5 +1,6 @@
 using System.Text.RegularExpressions;
 using DotCheck.StringValidation.CoreValidators.Enums;
+using DotCheck.StringValidation.CoreValidators.Interfaces;
 using DotCheck.StringValidation.Utils;
 
 namespace DotCheck.StringValidation.CoreValidators;
