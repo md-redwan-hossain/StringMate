@@ -2,9 +2,6 @@ namespace DotCheck.Test.StringValidation.TestData;
 
 public static class TimeData
 {
-    public static readonly string Default =
-        TimeOnly.FromDateTime(DateTime.Now).ToString();
-
     public static readonly string Time12HourWithoutSecond =
         TimeOnly.FromDateTime(DateTime.Now).ToShortTimeString();
 

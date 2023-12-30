@@ -6,6 +6,8 @@ using DotCheck.StringValidation.Utils;
 
 namespace DotCheck.StringValidation.CoreValidators;
 
+// this class is a potential violation of open-closed principal
+// but for simplicity for the user, it is deliberately written in this way
 public class HashValidation : IParameterizedValidation<HashingAlgorithm>
 {
     private static readonly Regex Md5Regex = RegexMaker(HashingAlgorithm.Md5);
