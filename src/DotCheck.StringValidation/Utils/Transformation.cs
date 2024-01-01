@@ -1,4 +1,4 @@
-using DotCheck.Exception;
+using DotCheck.StringValidation.Exceptions;
 
 namespace DotCheck.StringValidation.Utils;
 
