@@ -1,0 +1,1 @@
+DotCheck.StringValidation offers a collection of valuable extension methods designed for the C# string type, complemented by their corresponding data annotations. These extensions provide enhanced functionality for string validation in C# applications.
