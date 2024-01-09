@@ -11,7 +11,7 @@ public class UuidTest
     [Fact]
     public void V1Check()
     {
-        UuidData.V1.IsUuid(UuidVersion.V1).ShouldBeTrue();
+        UuidData.V1.DotCheck().IsUuid(UuidVersion.V1).ShouldBeTrue();
 
         var validationContext = new ValidationContext(UuidData.V1);
         var attribute = new UuidAttribute(UuidVersion.V1);
@@ -21,19 +21,19 @@ public class UuidTest
 
     [Fact]
     public void V2Check() =>
-        UuidData.V2.IsUuid(UuidVersion.V2).ShouldBeTrue();
+        UuidData.V2.DotCheck().IsUuid(UuidVersion.V2).ShouldBeTrue();
 
     [Fact]
     public void V3Check() =>
-        UuidData.V3.IsUuid(UuidVersion.V3).ShouldBeTrue();
+        UuidData.V3.DotCheck().IsUuid(UuidVersion.V3).ShouldBeTrue();
 
     [Fact]
     public void V4Check() =>
-        UuidData.V4.IsUuid(UuidVersion.V4).ShouldBeTrue();
+        UuidData.V4.DotCheck().IsUuid(UuidVersion.V4).ShouldBeTrue();
 
     [Fact]
     public void V5Check() =>
-        UuidData.V5.IsUuid(UuidVersion.V5).ShouldBeTrue();
+        UuidData.V5.DotCheck().IsUuid(UuidVersion.V5).ShouldBeTrue();
 
     [Fact]
     public void AllCheck() =>
@@ -41,11 +41,11 @@ public class UuidTest
 
     [Fact]
     public void NotUuidCheck() =>
-        "1".IsUuid(UuidVersion.V4).ShouldBeFalse();
+        "1".DotCheck().IsUuid(UuidVersion.V4).ShouldBeFalse();
 
     private static bool CheckAll()
     {
         var storage = new[] { UuidData.V1, UuidData.V2, UuidData.V3, UuidData.V4, UuidData.V5 };
-        return storage.All(x => x.IsUuid(UuidVersion.All));
+        return storage.All(x => x.DotCheck().IsUuid(UuidVersion.All));
     }
 }

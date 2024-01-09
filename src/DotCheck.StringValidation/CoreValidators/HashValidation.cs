@@ -2,12 +2,9 @@ using System.ComponentModel;
 using System.Text.RegularExpressions;
 using DotCheck.StringValidation.CoreValidators.Enums;
 using DotCheck.StringValidation.CoreValidators.Interfaces;
-using DotCheck.StringValidation.Utils;
 
 namespace DotCheck.StringValidation.CoreValidators;
 
-// this class is a potential violation of open-closed principal
-// but for simplicity for the user, it is deliberately written in this way
 public class HashValidation : IParameterizedValidation<HashingAlgorithm>
 {
     private static readonly Regex Md5Regex = RegexMaker(HashingAlgorithm.Md5);
@@ -27,26 +24,22 @@ public class HashValidation : IParameterizedValidation<HashingAlgorithm>
     private static Regex RegexMaker(HashingAlgorithm algorithm) =>
         new($"^[a-fA-F0-9]{{{(byte)algorithm}}}$");
 
-    public bool Validate(object? value, HashingAlgorithm algorithm)
-    {
-        var validString = Transformation.MakeValidString(value);
-
-        return algorithm.ToString() switch
+    public bool Validate(string value, HashingAlgorithm algorithm) =>
+        algorithm.ToString() switch
         {
-            nameof(HashingAlgorithm.Md4) => Md4Regex.IsMatch(validString),
-            nameof(HashingAlgorithm.Md5) => Md5Regex.IsMatch(validString),
-            nameof(HashingAlgorithm.Sha1) => Sha1Regex.IsMatch(validString),
-            nameof(HashingAlgorithm.Sha256) => Sha256Regex.IsMatch(validString),
-            nameof(HashingAlgorithm.Sha384) => Sha384Regex.IsMatch(validString),
-            nameof(HashingAlgorithm.Sha512) => Sha512Regex.IsMatch(validString),
-            nameof(HashingAlgorithm.RipeMd128) => RipeMd128Regex.IsMatch(validString),
-            nameof(HashingAlgorithm.RipeMd160) => RipeMd160Regex.IsMatch(validString),
-            nameof(HashingAlgorithm.Tiger128) => Tiger128Regex.IsMatch(validString),
-            nameof(HashingAlgorithm.Tiger160) => Tiger160Regex.IsMatch(validString),
-            nameof(HashingAlgorithm.Tiger192) => Tiger192Regex.IsMatch(validString),
-            nameof(HashingAlgorithm.Crc32) => Crc32Regex.IsMatch(validString),
-            nameof(HashingAlgorithm.Crc32B) => Crc32BRegex.IsMatch(validString),
+            nameof(HashingAlgorithm.Md4) => Md4Regex.IsMatch(value),
+            nameof(HashingAlgorithm.Md5) => Md5Regex.IsMatch(value),
+            nameof(HashingAlgorithm.Sha1) => Sha1Regex.IsMatch(value),
+            nameof(HashingAlgorithm.Sha256) => Sha256Regex.IsMatch(value),
+            nameof(HashingAlgorithm.Sha384) => Sha384Regex.IsMatch(value),
+            nameof(HashingAlgorithm.Sha512) => Sha512Regex.IsMatch(value),
+            nameof(HashingAlgorithm.RipeMd128) => RipeMd128Regex.IsMatch(value),
+            nameof(HashingAlgorithm.RipeMd160) => RipeMd160Regex.IsMatch(value),
+            nameof(HashingAlgorithm.Tiger128) => Tiger128Regex.IsMatch(value),
+            nameof(HashingAlgorithm.Tiger160) => Tiger160Regex.IsMatch(value),
+            nameof(HashingAlgorithm.Tiger192) => Tiger192Regex.IsMatch(value),
+            nameof(HashingAlgorithm.Crc32) => Crc32Regex.IsMatch(value),
+            nameof(HashingAlgorithm.Crc32B) => Crc32BRegex.IsMatch(value),
             _ => throw new InvalidEnumArgumentException()
         };
-    }
 }

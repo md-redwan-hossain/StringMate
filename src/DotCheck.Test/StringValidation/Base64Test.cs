@@ -7,17 +7,21 @@ public class Base64Test
 {
     [Fact]
     public void IsBase64WithUrlSafetyCheck() =>
-        Base64Data.ValidUrlSafe.All(x => x.IsBase64(checkUrlSafety: true)).ShouldBeTrue();
+        Base64Data.ValidUrlSafe.All(x => x.DotCheck()
+            .IsBase64(checkUrlSafety: true)).ShouldBeTrue();
 
     [Fact]
     public void IsNotBase64WithUrlSafetyCheck() =>
-        Base64Data.InvalidUrlSafe.All(x => x.IsBase64(checkUrlSafety: true)).ShouldBeFalse();
+        Base64Data.InvalidUrlSafe.All(x => x.DotCheck()
+            .IsBase64(checkUrlSafety: true)).ShouldBeFalse();
 
     [Fact]
     public void IsBase64WithoutUrlSafetyCheck() =>
-        Base64Data.Valid.All(x => x.IsBase64()).ShouldBeTrue();
+        Base64Data.Valid.All(x => x.DotCheck()
+            .IsBase64(checkUrlSafety: false)).ShouldBeTrue();
 
     [Fact]
     public void IsNotBase64WithoutUrlSafetyCheck() =>
-        Base64Data.Invalid.All(x => x.IsBase64()).ShouldBeFalse();
+        Base64Data.Invalid.All(x => x.DotCheck()
+            .IsBase64(checkUrlSafety: false)).ShouldBeFalse();
 }

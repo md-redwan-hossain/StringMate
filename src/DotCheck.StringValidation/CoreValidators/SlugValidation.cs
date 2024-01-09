@@ -9,6 +9,6 @@ public class SlugValidation : IValidation
     private static readonly Regex CharsetRegex =
         new(@"^[^\s-_](?!.*?[-_]{2,})[a-z0-9-\\][^\s]*[^-_\s]$");
 
-    public bool Validate(object? value) =>
+    public bool Validate(string value) =>
         CharsetRegex.IsMatch(Transformation.MakeValidString(value));
 }

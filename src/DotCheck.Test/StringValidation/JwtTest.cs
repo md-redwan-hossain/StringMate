@@ -7,9 +7,9 @@ public class JwtTest
 {
     [Fact]
     public void IsJwt() =>
-        JwtData.Valid.All(x => x.IsJwt()).ShouldBeTrue();
+        JwtData.Valid.All(x => x.DotCheck().IsJwt()).ShouldBeTrue();
 
     [Fact]
     public void IsNotJwt() =>
-        JwtData.Invalid.All(x => x.IsJwt()).ShouldBeFalse();
+        JwtData.Invalid.All(x => x.DotCheck().IsJwt()).ShouldBeFalse();
 }

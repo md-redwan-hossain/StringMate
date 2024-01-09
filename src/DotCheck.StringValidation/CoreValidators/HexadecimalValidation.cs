@@ -9,6 +9,6 @@ public class HexadecimalValidation : IValidation
     private static readonly Regex HexadecimalRegex =
         new(@"^(0x|0h)?[0-9A-F]+$", RegexOptions.IgnoreCase);
 
-    public bool Validate(object? value) =>
+    public bool Validate(string value) =>
         HexadecimalRegex.IsMatch(Transformation.MakeValidString(value));
 }

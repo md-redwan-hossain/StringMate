@@ -1,11 +1,10 @@
 using System.Text.RegularExpressions;
 using DotCheck.StringValidation.CoreValidators.Enums;
 using DotCheck.StringValidation.CoreValidators.Interfaces;
-using DotCheck.StringValidation.Utils;
 
 namespace DotCheck.StringValidation.CoreValidators;
 
-public class UuidValidation : IValidation
+public class UuidValidation : IParameterizedValidation<UuidVersion>
 {
     private static readonly Regex UuidV1Regex =
         new(@"^[0-9A-F]{8}-[0-9A-F]{4}-1[0-9A-F]{3}-[0-9A-F]{4}-[0-9A-F]{12}$", RegexOptions.IgnoreCase);
@@ -26,22 +25,16 @@ public class UuidValidation : IValidation
         new(@"^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$", RegexOptions.IgnoreCase);
 
 
-    public bool Validate(object? value) =>
-        UuidAllRegex.IsMatch(Transformation.MakeValidString(value));
-
-
-    public bool Validate(object? value, UuidVersion version)
+    public bool Validate(string value, UuidVersion version)
     {
-        var validString = Transformation.MakeValidString(value);
-
         return version switch
         {
-            UuidVersion.V1 => UuidV1Regex.IsMatch(validString),
-            UuidVersion.V2 => UuidV2Regex.IsMatch(validString),
-            UuidVersion.V3 => UuidV3Regex.IsMatch(validString),
-            UuidVersion.V4 => UuidV4Regex.IsMatch(validString),
-            UuidVersion.V5 => UuidV5Regex.IsMatch(validString),
-            _ => UuidAllRegex.IsMatch(validString)
+            UuidVersion.V1 => UuidV1Regex.IsMatch(value),
+            UuidVersion.V2 => UuidV2Regex.IsMatch(value),
+            UuidVersion.V3 => UuidV3Regex.IsMatch(value),
+            UuidVersion.V4 => UuidV4Regex.IsMatch(value),
+            UuidVersion.V5 => UuidV5Regex.IsMatch(value),
+            _ => UuidAllRegex.IsMatch(value)
         };
     }
 }

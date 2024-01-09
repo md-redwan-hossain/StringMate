@@ -7,9 +7,9 @@ public class SlugTest
 {
     [Fact]
     public void IsSlug() =>
-        SlugData.Valid.All(x => x.IsSlug()).ShouldBeTrue();
+        SlugData.Valid.All(x => x.DotCheck().IsSlug()).ShouldBeTrue();
 
     [Fact]
     public void IsNotSlug() =>
-        SlugData.Invalid.All(x => x.IsSlug()).ShouldBeFalse();
+        SlugData.Invalid.All(x => x.DotCheck().IsSlug()).ShouldBeFalse();
 }
