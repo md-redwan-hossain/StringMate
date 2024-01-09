@@ -1,11 +1,10 @@
 using System.ComponentModel;
 using System.Text.RegularExpressions;
-using DotCheck.StringValidation.CoreValidators.Enums;
-using DotCheck.StringValidation.CoreValidators.Interfaces;
+using DotCheck.StringValidation.Core.Enums;
 
-namespace DotCheck.StringValidation.CoreValidators;
+namespace DotCheck.StringValidation.Core;
 
-public class HashValidation : IParameterizedValidation<HashingAlgorithm>
+public static class HashValidation
 {
     private static readonly Regex Md5Regex = RegexMaker(HashingAlgorithm.Md5);
     private static readonly Regex Md4Regex = RegexMaker(HashingAlgorithm.Md4);
@@ -20,12 +19,12 @@ public class HashValidation : IParameterizedValidation<HashingAlgorithm>
     private static readonly Regex Tiger192Regex = RegexMaker(HashingAlgorithm.Tiger192);
     private static readonly Regex Crc32Regex = RegexMaker(HashingAlgorithm.Crc32);
     private static readonly Regex Crc32BRegex = RegexMaker(HashingAlgorithm.Crc32B);
-
+    
     private static Regex RegexMaker(HashingAlgorithm algorithm) =>
         new($"^[a-fA-F0-9]{{{(byte)algorithm}}}$");
 
-    public bool Validate(string value, HashingAlgorithm algorithm) =>
-        algorithm.ToString() switch
+    public static bool IsHash(this IDotCheckStringValidation _, string value, HashingAlgorithm algorithm)
+        => algorithm.ToString() switch
         {
             nameof(HashingAlgorithm.Md4) => Md4Regex.IsMatch(value),
             nameof(HashingAlgorithm.Md5) => Md5Regex.IsMatch(value),

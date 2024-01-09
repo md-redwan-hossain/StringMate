@@ -1,4 +1,4 @@
-namespace DotCheck.StringValidation.CoreValidators.Enums;
+namespace DotCheck.StringValidation.Core.Enums;
 
 public enum UuidVersion : byte
 {

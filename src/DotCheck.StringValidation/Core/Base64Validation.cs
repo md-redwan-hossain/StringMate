@@ -1,9 +1,8 @@
 using System.Text.RegularExpressions;
-using DotCheck.StringValidation.CoreValidators.Interfaces;
 
-namespace DotCheck.StringValidation.CoreValidators;
+namespace DotCheck.StringValidation.Core;
 
-public class Base64Validation : IParameterizedValidation<bool>
+public static class Base64Validation
 {
     private static readonly Regex NotBase64Regex =
         new("[^A-Z0-9+\\/=]", RegexOptions.IgnoreCase);
@@ -12,7 +11,7 @@ public class Base64Validation : IParameterizedValidation<bool>
         new("^[A-Z0-9_\\-]*$", RegexOptions.IgnoreCase);
 
 
-    public bool Validate(string value, bool checkUrlSafety)
+    public static bool IsBase64(this IDotCheckStringValidation _, string value, bool checkUrlSafety)
     {
         if (checkUrlSafety) return UrlSafeBase64Regex.IsMatch(value);
 

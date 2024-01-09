@@ -1,5 +1,5 @@
 using System.ComponentModel.DataAnnotations;
-using DotCheck.StringValidation.CoreValidators.Enums;
+using DotCheck.StringValidation.Core.Enums;
 using DotCheck.StringValidation.DataAnnotations;
 using DotCheck.Test.StringValidation.TestData;
 

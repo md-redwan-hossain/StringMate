@@ -2,7 +2,7 @@
 type, complemented by their corresponding data annotations. These extensions provide enhanced functionality for string
 validation in C# applications.
 
-**Example:**
+**Example Usage:**
 
 ```csharp
 IDotCheckStringValidation stringValidator = new DotCheckStringValidation();
