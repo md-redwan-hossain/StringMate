@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
-using DotCheck.StringValidation.CoreValidators;
-using DotCheck.StringValidation.CoreValidators.Enums;
+using DotCheck.StringValidation.Core;
+using DotCheck.StringValidation.Core.Enums;
 using DotCheck.StringValidation.Utils;
 
 namespace DotCheck.StringValidation.DataAnnotations;
@@ -14,7 +14,7 @@ public class UuidAttribute : ValidationAttribute
     private readonly UuidVersion _version;
 
     public override bool IsValid(object? value) =>
-        new UuidValidation().Validate(Transformation.MakeValidString(value), _version);
+        new DotCheckStringValidation().IsUuid(Transformation.MakeValidString(value), _version);
 
     public override string FormatErrorMessage(string name)
     {
