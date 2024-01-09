@@ -1,6 +1,6 @@
 namespace DotCheck.StringValidation;
 
-public sealed class DotCheckStringValidation : IDotCheckStringValidation
+internal sealed class DotCheckStringValidation : IDotCheckStringValidation
 {
     public string TextDataForValidation { get; }
 
