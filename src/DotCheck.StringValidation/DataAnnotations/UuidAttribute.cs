@@ -1,27 +1,28 @@
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
-using DotCheck.StringValidation.Core;
-using DotCheck.StringValidation.Core.Enums;
+using DotCheck.StringValidation.CoreValidators;
+using DotCheck.StringValidation.CoreValidators.Enums;
 using DotCheck.StringValidation.Utils;
 
-namespace DotCheck.StringValidation.DataAnnotations;
-
-public class UuidAttribute : ValidationAttribute
+namespace DotCheck.StringValidation.DataAnnotations
 {
-    public UuidAttribute() => _version = UuidVersion.All;
-    public UuidAttribute(UuidVersion version) => _version = version;
-
-    private readonly UuidVersion _version;
-
-    public override bool IsValid(object? value) =>
-        new DotCheckStringValidation().IsUuid(Transformation.MakeValidString(value), _version);
-
-    public override string FormatErrorMessage(string name)
+    public class UuidAttribute : ValidationAttribute
     {
-        var errorMsg = (_version == UuidVersion.All)
-            ? "The field is not a valid uuid."
-            : $"The field is not a valid uuid of version {(byte)_version}.";
+        public UuidAttribute() => _version = UuidVersion.All;
+        public UuidAttribute(UuidVersion version) => _version = version;
 
-        return string.Format(CultureInfo.CurrentCulture, errorMsg);
+        private readonly UuidVersion _version;
+
+        public override bool IsValid(object? value) =>
+             UuidValidation.Validate(Transformation.MakeValidString(value), _version);
+
+        public override string FormatErrorMessage(string name)
+        {
+            var errorMsg = (_version == UuidVersion.All)
+                ? "The field is not a valid uuid."
+                : $"The field is not a valid uuid of version {(byte)_version}.";
+
+            return string.Format(CultureInfo.CurrentCulture, errorMsg);
+        }
     }
 }

@@ -1,8 +1,11 @@
-namespace DotCheck.StringValidation.Exceptions;
+using System;
 
-public class EmptyStringException: Exception
+namespace DotCheck.StringValidation.Exceptions
 {
-    public EmptyStringException() : base("The provided value is an empty string.")
+    public class EmptyStringException: Exception
     {
+        public EmptyStringException() : base("The provided value is an empty string.")
+        {
+        }
     }
 }

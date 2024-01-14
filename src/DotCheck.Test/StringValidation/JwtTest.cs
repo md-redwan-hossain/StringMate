@@ -1,16 +1,18 @@
 using DotCheck.Test.StringValidation.TestData;
+using DotCheck.StringValidation;
+using Shouldly;
+using Xunit;
 
-namespace DotCheck.Test.StringValidation;
-
-public class JwtTest
+namespace DotCheck.Test.StringValidation
 {
-    [Fact]
-    public void IsJwt() =>
-        JwtData.Valid.All(x =>
-            Instance.DotCheckStringValidationInstance.IsJsonWebToken(x)).ShouldBeTrue();
+    public class JwtTest
+    {
+        [Fact]
+        public void IsJwt() =>
+            JwtData.Valid.All(DotCheckStringValidation.IsJwt).ShouldBeTrue();
 
-    [Fact]
-    public void IsNotJwt() =>
-        JwtData.Invalid.All(x =>
-            Instance.DotCheckStringValidationInstance.IsJsonWebToken(x)).ShouldBeFalse();
+        [Fact]
+        public void IsNotJwt() =>
+            JwtData.Invalid.All(DotCheckStringValidation.IsJwt).ShouldBeFalse();
+    }
 }

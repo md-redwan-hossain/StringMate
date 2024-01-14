@@ -1,9 +1,12 @@
-﻿namespace DotCheck.StringValidation.Exceptions;
+﻿using System;
 
-[Serializable]
-public class NotStringException : Exception
+namespace DotCheck.StringValidation.Exceptions
 {
-    public NotStringException() : base("The provided value is not a string.")
+    [Serializable]
+    public class NotStringException : Exception
     {
+        public NotStringException() : base("The provided value is not a string.")
+        {
+        }
     }
 }

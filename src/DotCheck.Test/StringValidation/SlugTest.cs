@@ -1,16 +1,18 @@
 using DotCheck.Test.StringValidation.TestData;
+using DotCheck.StringValidation;
+using Shouldly;
+using Xunit;
 
-namespace DotCheck.Test.StringValidation;
-
-public class SlugTest
+namespace DotCheck.Test.StringValidation
 {
-    [Fact]
-    public void IsSlug() =>
-        SlugData.Valid.All(x =>
-            Instance.DotCheckStringValidationInstance.IsSlug(x)).ShouldBeTrue();
+    public class SlugTest
+    {
+        [Fact]
+        public void IsSlug() =>
+            SlugData.Valid.All(DotCheckStringValidation.IsSlug).ShouldBeTrue();
 
-    [Fact]
-    public void IsNotSlug() =>
-        SlugData.Invalid.All(x =>
-            Instance.DotCheckStringValidationInstance.IsSlug(x)).ShouldBeFalse();
+        [Fact]
+        public void IsNotSlug() =>
+            SlugData.Invalid.All(DotCheckStringValidation.IsSlug).ShouldBeFalse();
+    }
 }

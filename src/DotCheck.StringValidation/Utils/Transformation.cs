@@ -1,16 +1,17 @@
 using DotCheck.StringValidation.Exceptions;
 
-namespace DotCheck.StringValidation.Utils;
-
-public static class Transformation
+namespace DotCheck.StringValidation.Utils
 {
-    public static string MakeValidString(object? value)
+    public static class Transformation
     {
-        if (value is string castedValue)
+        public static string MakeValidString(object? value)
         {
-            return Assert.IsEmptyString(castedValue) ? "" : castedValue.Trim();
+            if (value is string castedValue)
+            {
+                return Assert.IsEmptyString(castedValue) ? "" : castedValue.Trim();
+            }
+
+            throw new NotStringException();
         }
-        
-        throw new NotStringException();
     }
 }

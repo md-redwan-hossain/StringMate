@@ -1,8 +1,11 @@
-namespace DotCheck.StringValidation.Exceptions;
+using System;
 
-public class WhiteSpaceOnlyStringException: Exception
+namespace DotCheck.StringValidation.Exceptions
 {
-    public WhiteSpaceOnlyStringException() : base("The provided string contains only whitespace.")
+    public class WhiteSpaceOnlyStringException: Exception
     {
+        public WhiteSpaceOnlyStringException() : base("The provided string contains only whitespace.")
+        {
+        }
     }
 }
