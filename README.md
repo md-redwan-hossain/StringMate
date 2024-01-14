@@ -4,7 +4,8 @@ validation in C# applications.
 
 - `DotCheckStringValidation` is a static class which contains all the validation methods.
 - Since it is an Static class, garbage collection won't be an issue.
-  **Example Usage:**
+
+**Example Usage:**
 
 ```csharp
 var result = DotCheckStringValidation.IsTimeOf12Hour("06:10 PM", includeSecond: false);
