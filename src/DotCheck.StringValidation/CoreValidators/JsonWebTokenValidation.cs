@@ -1,4 +1,4 @@
-using System.Linq;
+using System;
 
 namespace DotCheck.StringValidation.CoreValidators
 {
@@ -9,7 +9,8 @@ namespace DotCheck.StringValidation.CoreValidators
             var dotSeparated = value.Split('.');
 
             return dotSeparated.Length == 3 &&
-                   dotSeparated.All(x => Base64Validation.Validate(x, checkUrlSafety: true));
+                   Array.TrueForAll(dotSeparated, 
+                       x => Base64Validation.Validate(x, checkUrlSafety: true));
         }
     }
 }

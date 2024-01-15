@@ -8,7 +8,7 @@ namespace DotCheck.StringValidation.Utils
         {
             if (value is string castedValue)
             {
-                return Assert.IsEmptyString(castedValue) ? "" : castedValue.Trim();
+                return Assert.IsEmptyString(castedValue) ? "" : castedValue;
             }
 
             throw new NotStringException();
