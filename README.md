@@ -1,9 +1,9 @@
 `DotCheck.StringValidation` offers a collection of valuable extension methods designed for validating the C# `string`
 type, complemented by their corresponding data annotations. These extensions provide enhanced functionality for string
 validation in C# applications.
-
 - `DotCheckStringValidation` is a static class which contains all the validation methods.
 - Since it is an Static class, garbage collection won't be an issue.
+- **Available in [Nuget](https://www.nuget.org/packages/DotCheck.StringValidation/)**
 
 **Example Usage:**
 
