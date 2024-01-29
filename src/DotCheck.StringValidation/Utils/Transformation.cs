@@ -2,9 +2,9 @@ using DotCheck.StringValidation.Exceptions;
 
 namespace DotCheck.StringValidation.Utils
 {
-    public static class Transformation
+    internal static class Transformation
     {
-        public static string MakeValidString(object? value)
+        internal static string MakeValidString(object? value)
         {
             if (value is string castedValue)
             {

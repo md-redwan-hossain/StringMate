@@ -14,9 +14,10 @@ namespace DotCheck.StringValidation.DataAnnotations
         private readonly HashingAlgorithm _algorithm;
 
         public override bool IsValid(object? value) =>
-             HashValidation.Validate(Transformation.MakeValidString(value), _algorithm);
+            HashValidation.Validate(Transformation.MakeValidString(value), _algorithm);
 
         public override string FormatErrorMessage(string name) =>
-            string.Format(CultureInfo.CurrentCulture, "The field is not a valid md5 hash.");
+            string.Format(CultureInfo.CurrentCulture,
+                $"The field is not a valid {_algorithm.ToString()} hash.");
     }
 }
