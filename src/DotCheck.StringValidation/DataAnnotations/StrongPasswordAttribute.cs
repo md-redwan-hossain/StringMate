@@ -1,7 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using DotCheck.StringValidation.CoreValidators;
-using DotCheck.StringValidation.Utils;
 
 namespace DotCheck.StringValidation.DataAnnotations
 {
@@ -35,9 +34,13 @@ namespace DotCheck.StringValidation.DataAnnotations
             _minUniqueChars = minUniqueChars;
         }
 
-        public override bool IsValid(object? value) =>
-            StrongPasswordValidation.Validate(Transformation.MakeValidString(value), _minLength, _minLowercase,
-                _minUppercase, _minNumbers, _minSymbols, _minUniqueChars);
+        public override bool IsValid(object? value)
+        {
+            if (value == null) return true;
+            return value is string str && StrongPasswordValidation.Validate
+            (str, _minLength, _minLowercase, _minUppercase, _minNumbers,
+                _minSymbols, _minUniqueChars);
+        }
 
         public override string FormatErrorMessage(string name) =>
             string.Format(CultureInfo.CurrentCulture, "The field is not a valid strong password.");

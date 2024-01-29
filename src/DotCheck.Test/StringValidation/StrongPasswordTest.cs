@@ -7,7 +7,7 @@ using Xunit;
 
 namespace DotCheck.Test.StringValidation;
 
-public class StrongPasswordValidation
+public class StrongPasswordTest
 {
     [Fact]
     public void IsStrongPassword() =>

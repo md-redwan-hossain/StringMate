@@ -2,7 +2,6 @@ using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using DotCheck.StringValidation.CoreValidators;
 using DotCheck.StringValidation.CoreValidators.Enums;
-using DotCheck.StringValidation.Utils;
 
 namespace DotCheck.StringValidation.DataAnnotations
 {
@@ -13,8 +12,11 @@ namespace DotCheck.StringValidation.DataAnnotations
 
         private readonly HashingAlgorithm _algorithm;
 
-        public override bool IsValid(object? value) =>
-            HashValidation.Validate(Transformation.MakeValidString(value), _algorithm);
+        public override bool IsValid(object? value)
+        {
+            if (value == null) return true;
+            return value is string str && HashValidation.Validate(str, _algorithm);
+        }
 
         public override string FormatErrorMessage(string name) =>
             string.Format(CultureInfo.CurrentCulture,

@@ -2,7 +2,6 @@ using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using DotCheck.StringValidation.CoreValidators;
 using DotCheck.StringValidation.CoreValidators.Enums;
-using DotCheck.StringValidation.Utils;
 
 namespace DotCheck.StringValidation.DataAnnotations
 {
@@ -13,8 +12,11 @@ namespace DotCheck.StringValidation.DataAnnotations
 
         private readonly UuidVersion _version;
 
-        public override bool IsValid(object? value) =>
-             UuidValidation.Validate(Transformation.MakeValidString(value), _version);
+        public override bool IsValid(object? value)
+        {
+            if (value == null) return true;
+            return value is string str && UuidValidation.Validate(str, _version);
+        }
 
         public override string FormatErrorMessage(string name)
         {

@@ -2,7 +2,6 @@ using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using DotCheck.StringValidation.CoreValidators;
 using DotCheck.StringValidation.Helpers;
-using DotCheck.StringValidation.Utils;
 
 namespace DotCheck.StringValidation.DataAnnotations
 {
@@ -22,8 +21,11 @@ namespace DotCheck.StringValidation.DataAnnotations
 
         private readonly string _dateFormat;
 
-        public override bool IsValid(object? value) =>
-            DateValidation.Validate(Transformation.MakeValidString(value), _dateFormat);
+        public override bool IsValid(object? value)
+        {
+            if (value == null) return true;
+            return value is string str && DateValidation.Validate(str, _dateFormat);
+        }
 
         public override string FormatErrorMessage(string name) =>
             string.Format(CultureInfo.CurrentCulture,

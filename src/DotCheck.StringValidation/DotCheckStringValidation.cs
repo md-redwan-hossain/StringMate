@@ -10,6 +10,9 @@ namespace DotCheck.StringValidation
             StrongPasswordValidation.Validate(text, minLength, minLowercase,
                 minUppercase, minNumbers, minSymbols, minUniqueChars);
 
+        public static bool IsEnumMember<TEnum>(string text) =>
+            EnumMemberValidation.Validate<TEnum>(text);
+
         public static bool IsDate(string text, string dateFormat) =>
             DateValidation.Validate(text, dateFormat);
 
