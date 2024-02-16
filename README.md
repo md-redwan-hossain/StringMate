@@ -1,21 +1,21 @@
-`DotCheck.StringValidation` offers a collection of useful methods designed for validating the C# `string`
+`StringMate` offers a collection of valuable extension methods designed for validating the C# `string`
 type, complemented by their corresponding data annotations. These extensions provide enhanced functionality for string
 validation in C# applications.
 
-- `DotCheckStringValidation` is a static class which contains all the validation methods.
+- `StrWarden` is a static class which contains all the validation methods.
 - Since it is a Static class, garbage collection won't be an issue.
-- To install, run `dotnet add package DotCheck.StringValidation` or from
-  **[Nuget](https://www.nuget.org/packages/DotCheck.StringValidation/)**
+- To install, run `dotnet add package StringMate` or from
+  **[Nuget](https://www.nuget.org/packages/StringMate/)**
 
 **Example Usage:**
 
 ```csharp
-using DotCheck.StringValidation;
-using DotCheck.StringValidation.Helpers;
+using StringMate;
+using StringMate.Helpers;
 
-var resultOfTimeValidation = DotCheckStringValidation.Is12HourTime("06:10 PM", includeSecond: false);
+
+var resultOfTimeValidation = StrWarden.Is12HourTime("06:10 PM", includeSecond: false);
 if (resultOfTimeValidation) Console.WriteLine("Yee! Validated time");
-
 
 
 var constructedDateFormat = new DateFormatBuilder()
@@ -25,11 +25,11 @@ var constructedDateFormat = new DateFormatBuilder()
     .AddHyphenDelimiter()
     .Build();
 
-var resultOfDateValidation = DotCheckStringValidation.IsDate("10-11-2014", dateFormat: constructedDateFormat);
+var resultOfDateValidation = StrWarden.IsDate("10-11-2014", dateFormat: constructedDateFormat);
 if (resultOfDateValidation) Console.WriteLine("Yee! Validated date");
 ```
 
-# Available Methods in `DotCheckStringValidation` Class
+# Available Methods in `StrWarden` Class
 
 | Method             | Signature                                                                                                                                                      | Description                                                                                                                                                                                                                              |
 |--------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -46,7 +46,7 @@ if (resultOfDateValidation) Console.WriteLine("Yee! Validated date");
 | `IsEnumMember`     | `bool IsEnumMember<TEnum>(string text)`                                                                                                                        | Validates enum member of the given enum generic type parameter.                                                                                                                                                                          |
 | `IsHexadecimal`    | `bool IsHexadecimal(string text)`                                                                                                                              | Validates hexadecimal number.                                                                                                                                                                                                            |
 
-# Available Data Annotations based on `DotCheckStringValidation` class
+# Available Data Annotations based on `StrWarden` class
 
 | Attribute                 | Data Annotation                                                                                                                                                        | Description                                                                                                                                                                                                                                                |
 |---------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
