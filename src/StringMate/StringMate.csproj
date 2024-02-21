@@ -3,7 +3,7 @@
     <PropertyGroup>
         <TargetFrameworks>net5.0;net6.0;net7.0;net8.0</TargetFrameworks>
         <Nullable>enable</Nullable>
-        <Title>DotCheck.StringValidation</Title>
+        <Title>StringMate</Title>
         <Authors>Md. Redwan Hossain</Authors>
         <Copyright>Copyright (c) Md. Redwan Hossain</Copyright>
         <Description>StringMate offers a collection of valuable extension methods designed for validating the C# string type, complemented by their corresponding data annotations. These extensions provide enhanced functionality for string validation in C# applications.</Description>

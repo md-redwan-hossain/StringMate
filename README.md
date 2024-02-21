@@ -2,7 +2,7 @@
 type, complemented by their corresponding data annotations. These extensions provide enhanced functionality for string
 validation in C# applications.
 
-- `StrWarden` is a static class which contains all the validation methods.
+- `Warden` is a static class which contains all the validation methods.
 - Since it is a Static class, garbage collection won't be an issue.
 - To install, run `dotnet add package StringMate` or from
   **[Nuget](https://www.nuget.org/packages/StringMate/)**
@@ -10,11 +10,11 @@ validation in C# applications.
 **Example Usage:**
 
 ```csharp
-using StringMate;
+using StringMate.Validation;
 using StringMate.Helpers;
 
 
-var resultOfTimeValidation = StrWarden.Is12HourTime("06:10 PM", includeSecond: false);
+var resultOfTimeValidation = Warden.Is12HourTime("06:10 PM", includeSecond: false);
 if (resultOfTimeValidation) Console.WriteLine("Yee! Validated time");
 
 
@@ -25,11 +25,11 @@ var constructedDateFormat = new DateFormatBuilder()
     .AddHyphenDelimiter()
     .Build();
 
-var resultOfDateValidation = StrWarden.IsDate("10-11-2014", dateFormat: constructedDateFormat);
+var resultOfDateValidation = Warden.IsDate("10-11-2014", dateFormat: constructedDateFormat);
 if (resultOfDateValidation) Console.WriteLine("Yee! Validated date");
 ```
 
-# Available Methods in `StrWarden` Class
+# Available Methods in `Warden` Class
 
 | Method             | Signature                                                                                                                                                      | Description                                                                                                                                                                                                                              |
 |--------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -46,7 +46,7 @@ if (resultOfDateValidation) Console.WriteLine("Yee! Validated date");
 | `IsEnumMember`     | `bool IsEnumMember<TEnum>(string text)`                                                                                                                        | Validates enum member of the given enum generic type parameter.                                                                                                                                                                          |
 | `IsHexadecimal`    | `bool IsHexadecimal(string text)`                                                                                                                              | Validates hexadecimal number.                                                                                                                                                                                                            |
 
-# Available Data Annotations based on `StrWarden` class
+# Available Data Annotations based on `Warden` class
 
 | Attribute                 | Data Annotation                                                                                                                                                        | Description                                                                                                                                                                                                                                                |
 |---------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
