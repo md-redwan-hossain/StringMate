@@ -1,4 +1,4 @@
-`StringMate` offers a collection of valuable extension methods designed for validating the C# `string`
+`StringMate` offers a collection of valuable methods designed for validating the C# `string`
 type, complemented by their corresponding data annotations. These extensions provide enhanced functionality for string
 validation in C# applications.
 
