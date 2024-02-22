@@ -31,18 +31,26 @@ namespace StringMate.Generators
         private const string OrSign = " OR ";
         private const string AndSign = " AND ";
         private const string InSign = " IN ";
+        private const string NotSign = " NOT ";
         private const string NotInSign = " NOT IN ";
         private const string BetweenSign = " BETWEEN ";
+        private const string NotBetweenSign = " NOT BETWEEN ";
 
-        public static string And(string leftOperand, string rightOperand)
+        public string And(string leftOperand, string rightOperand)
         {
             return WrapWithParentheses(string.Concat(leftOperand, AndSign, rightOperand));
         }
 
-        public static string Or(string leftOperand, string rightOperand)
+        public string Or(string leftOperand, string rightOperand)
         {
             return WrapWithParentheses(string.Concat(leftOperand, OrSign, rightOperand));
         }
+
+        public string Not(string leftOperand, string rightOperand)
+        {
+            return WrapWithParentheses(string.Concat(leftOperand, NotSign, rightOperand));
+        }
+
 
         public string In(string leftOperand, ICollection<int> rightOperands, bool preserveLeftOperandCase = true)
         {
@@ -239,21 +247,51 @@ namespace StringMate.Generators
         }
 
 
-        public static string Between(string leftOperand, string rightOperand)
+        public string Between(string columnName, string leftOperand,
+            string rightOperand, bool preserveColumnNameCase = true)
         {
-            return string.Concat(BetweenSign, SqlString(leftOperand), AndSign, SqlString(rightOperand));
+            return string.Concat(OperandHandler(columnName, preserveColumnNameCase),
+                BetweenSign, SqlString(leftOperand), AndSign, SqlString(rightOperand));
         }
 
 
-        public static string Between(int leftOperand, int rightOperand)
+        public string Between(string columnName, int leftOperand,
+            int rightOperand, bool preserveColumnNameCase = true)
         {
-            return string.Concat(BetweenSign, leftOperand, AndSign, rightOperand);
+            return string.Concat(
+                OperandHandler(columnName, preserveColumnNameCase),
+                BetweenSign, leftOperand, AndSign, rightOperand);
         }
 
-        public static string Between(double leftOperand, double rightOperand)
+        public string Between(string columnName, double leftOperand,
+            double rightOperand, bool preserveColumnNameCase = true)
         {
-            return string.Concat(BetweenSign, leftOperand, AndSign, rightOperand);
+            return string.Concat(OperandHandler(columnName, preserveColumnNameCase),
+                BetweenSign, leftOperand, AndSign, rightOperand);
         }
+
+        public string NotBetween(string columnName, string leftOperand,
+            string rightOperand, bool preserveColumnNameCase = true)
+        {
+            return string.Concat(OperandHandler(columnName, preserveColumnNameCase),
+                NotBetweenSign, SqlString(leftOperand), AndSign, SqlString(rightOperand));
+        }
+
+
+        public string NotBetween(string columnName, int leftOperand,
+            int rightOperand, bool preserveColumnNameCase = true)
+        {
+            return string.Concat(OperandHandler(columnName, preserveColumnNameCase),
+                NotBetweenSign, leftOperand, AndSign, rightOperand);
+        }
+
+        public string NotBetween(string columnName, double leftOperand,
+            double rightOperand, bool preserveColumnNameCase = true)
+        {
+            return string.Concat(OperandHandler(columnName, preserveColumnNameCase),
+                NotBetweenSign, leftOperand, AndSign, rightOperand);
+        }
+
 
         private string OperandHandler(string value, bool preserveCase)
         {
