@@ -17,17 +17,17 @@ namespace StringMate.SqlCheckConstrainGenerator
         private const string InSign = " IN ";
         private const string NotInSign = " NOT IN ";
 
-        protected string And(string leftOperand, string rightOperand)
+        public string And(string leftOperand, string rightOperand)
         {
             return WrapWithParentheses(string.Concat(leftOperand, AndSign, rightOperand));
         }
 
-        protected string Or(string leftOperand, string rightOperand)
+        public string Or(string leftOperand, string rightOperand)
         {
             return WrapWithParentheses(string.Concat(leftOperand, OrSign, rightOperand));
         }
 
-        protected string In(string leftOperand, ICollection<int> rightOperands,
+        public string In(string leftOperand, ICollection<int> rightOperands,
             bool preserveLeftOperandCase = true)
         {
             return string.Concat(OperandHandler(leftOperand, preserveLeftOperandCase), InSign,
@@ -35,14 +35,14 @@ namespace StringMate.SqlCheckConstrainGenerator
         }
 
 
-        protected string In(string leftOperand, ICollection<string> rightOperands,
+        public string In(string leftOperand, ICollection<string> rightOperands,
             bool preserveLeftOperandCase = true)
         {
             return string.Concat(OperandHandler(leftOperand, preserveLeftOperandCase), InSign,
                 WrapWithParentheses(CommaSeparatedCollectionData(rightOperands)));
         }
 
-        protected string In(string leftOperand, ICollection<Enum> rightOperands,
+        public string In(string leftOperand, ICollection<Enum> rightOperands,
             bool preserveLeftOperandCase = true)
         {
             return string.Concat(OperandHandler(leftOperand, preserveLeftOperandCase), InSign,
@@ -50,7 +50,7 @@ namespace StringMate.SqlCheckConstrainGenerator
         }
 
 
-        protected string NotIn(string leftOperand, ICollection<int> rightOperands,
+        public string NotIn(string leftOperand, ICollection<int> rightOperands,
             bool preserveLeftOperandCase = true)
         {
             return string.Concat(OperandHandler(leftOperand, preserveLeftOperandCase), NotInSign,
@@ -58,21 +58,21 @@ namespace StringMate.SqlCheckConstrainGenerator
         }
 
 
-        protected string NotIn(string leftOperand, ICollection<string> rightOperands,
+        public string NotIn(string leftOperand, ICollection<string> rightOperands,
             bool preserveLeftOperandCase = true)
         {
             return string.Concat(OperandHandler(leftOperand, preserveLeftOperandCase), NotInSign,
                 WrapWithParentheses(CommaSeparatedCollectionData(rightOperands)));
         }
 
-        protected string NotIn(string leftOperand, ICollection<Enum> rightOperands,
+        public string NotIn(string leftOperand, ICollection<Enum> rightOperands,
             bool preserveLeftOperandCase = true)
         {
             return string.Concat(OperandHandler(leftOperand, preserveLeftOperandCase), NotInSign,
                 WrapWithParentheses(CommaSeparatedCollectionData(rightOperands)));
         }
 
-        protected string NotEqualTo(
+        public string NotEqualTo(
             string leftOperand,
             string rightOperand,
             bool preserveLeftOperandCase = true,
@@ -85,19 +85,19 @@ namespace StringMate.SqlCheckConstrainGenerator
         }
 
 
-        protected string NotEqualTo(string leftOperand, Enum rightOperand, bool preserveLeftOperandCase = true)
+        public string NotEqualTo(string leftOperand, Enum rightOperand, bool preserveLeftOperandCase = true)
         {
             return string.Concat(OperandHandler(leftOperand, preserveLeftOperandCase), NotEqualSign,
                 EnumValueToString(rightOperand));
         }
 
-        protected string NotEqualTo(string leftOperand, int rightOperand, bool preserveLeftOperandCase = true)
+        public string NotEqualTo(string leftOperand, int rightOperand, bool preserveLeftOperandCase = true)
         {
             return string.Concat(OperandHandler(leftOperand, preserveLeftOperandCase), NotEqualSign, rightOperand);
         }
 
 
-        protected string EqualTo(string leftOperand, string rightOperand,
+        public string EqualTo(string leftOperand, string rightOperand,
             bool preserveLeftOperandCase = true, bool preserveRightOperandCase = true
         )
         {
@@ -106,20 +106,20 @@ namespace StringMate.SqlCheckConstrainGenerator
         }
 
 
-        protected string EqualTo(string leftOperand, int rightOperand, bool preserveLeftOperandCase = true)
+        public string EqualTo(string leftOperand, int rightOperand, bool preserveLeftOperandCase = true)
         {
             return string.Concat(OperandHandler(leftOperand, preserveLeftOperandCase), EqualSign, rightOperand);
         }
 
 
-        protected string EqualTo(string leftOperand, Enum rightOperand, bool preserveLeftOperandCase = true)
+        public string EqualTo(string leftOperand, Enum rightOperand, bool preserveLeftOperandCase = true)
         {
             return string.Concat(OperandHandler(leftOperand, preserveLeftOperandCase), EqualSign,
                 EnumValueToString(rightOperand));
         }
 
 
-        protected string GreaterThan(string leftOperand, string rightOperand,
+        public string GreaterThan(string leftOperand, string rightOperand,
             bool preserveLeftOperandCase = true, bool preserveRightOperandCase = true)
         {
             return string.Concat(OperandHandler(leftOperand, preserveLeftOperandCase), GreaterThanSign,
@@ -127,20 +127,20 @@ namespace StringMate.SqlCheckConstrainGenerator
         }
 
 
-        protected string GreaterThan(string leftOperand, Enum rightOperand,
+        public string GreaterThan(string leftOperand, Enum rightOperand,
             bool preserveLeftOperandCase = true)
         {
             return string.Concat(OperandHandler(leftOperand, preserveLeftOperandCase), GreaterThanSign,
                 EnumValueToString(rightOperand));
         }
 
-        protected string GreaterThan(string leftOperand, int rightOperand, bool preserveLeftOperandCase = true)
+        public string GreaterThan(string leftOperand, int rightOperand, bool preserveLeftOperandCase = true)
         {
             return string.Concat(OperandHandler(leftOperand, preserveLeftOperandCase), GreaterThanSign, rightOperand);
         }
 
 
-        protected string GreaterThanOrEqual(string leftOperand, string rightOperand,
+        public string GreaterThanOrEqual(string leftOperand, string rightOperand,
             bool preserveLeftOperandCase = true, bool preserveRightOperandCase = true)
         {
             return string.Concat(OperandHandler(leftOperand, preserveLeftOperandCase), GreaterThanOrEqualSign,
@@ -148,14 +148,14 @@ namespace StringMate.SqlCheckConstrainGenerator
         }
 
 
-        protected string GreaterThanOrEqual(string leftOperand, Enum rightOperand,
+        public string GreaterThanOrEqual(string leftOperand, Enum rightOperand,
             bool preserveLeftOperandCase = true)
         {
             return string.Concat(OperandHandler(leftOperand, preserveLeftOperandCase), GreaterThanOrEqualSign,
                 EnumValueToString(rightOperand));
         }
 
-        protected string GreaterThanOrEqual(string leftOperand, int rightOperand,
+        public string GreaterThanOrEqual(string leftOperand, int rightOperand,
             bool preserveLeftOperandCase = true)
         {
             return string.Concat(OperandHandler(leftOperand, preserveLeftOperandCase), GreaterThanOrEqualSign,
@@ -163,7 +163,7 @@ namespace StringMate.SqlCheckConstrainGenerator
         }
 
 
-        protected string LessThan(string leftOperand, string rightOperand,
+        public string LessThan(string leftOperand, string rightOperand,
             bool preserveLeftOperandCase = true, bool preserveRightOperandCase = true)
         {
             return string.Concat(OperandHandler(leftOperand, preserveLeftOperandCase), LessThanSign,
@@ -171,20 +171,20 @@ namespace StringMate.SqlCheckConstrainGenerator
         }
 
 
-        protected string LessThan(string leftOperand, Enum rightOperand,
+        public string LessThan(string leftOperand, Enum rightOperand,
             bool preserveLeftOperandCase = true)
         {
             return string.Concat(OperandHandler(leftOperand, preserveLeftOperandCase), LessThanSign,
                 EnumValueToString(rightOperand));
         }
 
-        protected string LessThan(string leftOperand, int rightOperand, bool preserveLeftOperandCase = true)
+        public string LessThan(string leftOperand, int rightOperand, bool preserveLeftOperandCase = true)
         {
             return string.Concat(OperandHandler(leftOperand, preserveLeftOperandCase), LessThanSign, rightOperand);
         }
 
 
-        protected string LessThanOrEqual(string leftOperand, string rightOperand,
+        public string LessThanOrEqual(string leftOperand, string rightOperand,
             bool preserveLeftOperandCase = true, bool preserveRightOperandCase = true)
         {
             return string.Concat(OperandHandler(leftOperand, preserveLeftOperandCase), LessThanOrEqualSign,
@@ -192,14 +192,14 @@ namespace StringMate.SqlCheckConstrainGenerator
         }
 
 
-        protected string LessThanOrEqual(string leftOperand, Enum rightOperand,
+        public string LessThanOrEqual(string leftOperand, Enum rightOperand,
             bool preserveLeftOperandCase = true)
         {
             return string.Concat(OperandHandler(leftOperand, preserveLeftOperandCase), LessThanOrEqualSign,
                 EnumValueToString(rightOperand));
         }
 
-        protected string LessThanOrEqual(string leftOperand, int rightOperand,
+        public string LessThanOrEqual(string leftOperand, int rightOperand,
             bool preserveLeftOperandCase = true)
         {
             return string.Concat(OperandHandler(leftOperand, preserveLeftOperandCase), LessThanOrEqualSign,
