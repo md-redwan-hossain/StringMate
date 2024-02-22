@@ -5,11 +5,17 @@ using StringMate.Enums;
 
 namespace StringMate.Generators
 {
+    /// <summary>
+    /// <c>SqlCheckConstrainGenerator</c> is an utility class for generating raw sql code for check-constrains in a type-safe manner.
+    /// It can be useful with Entity Framework Core since it doesn't have strongly-typed check-constrain support and requires raw sql code.
+    /// </summary>
     public class SqlCheckConstrainGenerator
     {
         private readonly bool? _preserveCase;
         private readonly RelationalDatabase _relationalDatabase;
 
+        /// <param name="relationalDatabase">determines the preserveCase symbols based on database.</param>
+        /// <param name="preserveCase">overrides preserveCase related method parameters.</param>
         public SqlCheckConstrainGenerator(RelationalDatabase relationalDatabase, bool? preserveCase = null)
         {
             _relationalDatabase = relationalDatabase;
@@ -26,72 +32,65 @@ namespace StringMate.Generators
         private const string AndSign = " AND ";
         private const string InSign = " IN ";
         private const string NotInSign = " NOT IN ";
+        private const string BetweenSign = " BETWEEN ";
 
-        public string And(string leftOperand, string rightOperand)
+        public static string And(string leftOperand, string rightOperand)
         {
             return WrapWithParentheses(string.Concat(leftOperand, AndSign, rightOperand));
         }
 
-        public string Or(string leftOperand, string rightOperand)
+        public static string Or(string leftOperand, string rightOperand)
         {
             return WrapWithParentheses(string.Concat(leftOperand, OrSign, rightOperand));
         }
 
-        public string In(string leftOperand, ICollection<int> rightOperands,
-            bool preserveLeftOperandCase = true)
+        public string In(string leftOperand, ICollection<int> rightOperands, bool preserveLeftOperandCase = true)
         {
             return string.Concat(OperandHandler(leftOperand, preserveLeftOperandCase), InSign,
                 WrapWithParentheses(CommaSeparatedCollectionData(rightOperands)));
         }
 
 
-        public string In(string leftOperand, ICollection<string> rightOperands,
-            bool preserveLeftOperandCase = true)
+        public string In(string leftOperand, ICollection<string> rightOperands, bool preserveLeftOperandCase = true)
         {
             return string.Concat(OperandHandler(leftOperand, preserveLeftOperandCase), InSign,
                 WrapWithParentheses(CommaSeparatedCollectionData(rightOperands)));
         }
 
-        public string In(string leftOperand, ICollection<Enum> rightOperands,
-            bool preserveLeftOperandCase = true)
+        public string In(string leftOperand, ICollection<Enum> rightOperands, bool preserveLeftOperandCase = true)
         {
             return string.Concat(OperandHandler(leftOperand, preserveLeftOperandCase), InSign,
                 WrapWithParentheses(CommaSeparatedCollectionData(rightOperands)));
         }
 
 
-        public string NotIn(string leftOperand, ICollection<int> rightOperands,
-            bool preserveLeftOperandCase = true)
+        public string NotIn(string leftOperand, ICollection<int> rightOperands, bool preserveLeftOperandCase = true)
         {
             return string.Concat(OperandHandler(leftOperand, preserveLeftOperandCase), NotInSign,
                 WrapWithParentheses(CommaSeparatedCollectionData(rightOperands)));
         }
 
 
-        public string NotIn(string leftOperand, ICollection<string> rightOperands,
-            bool preserveLeftOperandCase = true)
+        public string NotIn(string leftOperand, ICollection<string> rightOperands, bool preserveLeftOperandCase = true)
         {
             return string.Concat(OperandHandler(leftOperand, preserveLeftOperandCase), NotInSign,
                 WrapWithParentheses(CommaSeparatedCollectionData(rightOperands)));
         }
 
-        public string NotIn(string leftOperand, ICollection<Enum> rightOperands,
-            bool preserveLeftOperandCase = true)
+        public string NotIn(string leftOperand, ICollection<Enum> rightOperands, bool preserveLeftOperandCase = true)
         {
             return string.Concat(OperandHandler(leftOperand, preserveLeftOperandCase), NotInSign,
                 WrapWithParentheses(CommaSeparatedCollectionData(rightOperands)));
         }
 
-        public string NotEqualTo(
-            string leftOperand,
-            string rightOperand,
-            bool preserveLeftOperandCase = true,
-            bool preserveRightOperandCase = true
+        public string NotEqualTo(string leftOperand, string rightOperand, bool preserveLeftOperandCase = true
         )
         {
             return string.Concat(
-                OperandHandler(leftOperand, preserveLeftOperandCase), NotEqualSign,
-                OperandHandler(rightOperand, preserveRightOperandCase));
+                OperandHandler(leftOperand, preserveLeftOperandCase),
+                NotEqualSign,
+                SqlString(rightOperand)
+            );
         }
 
 
@@ -107,12 +106,14 @@ namespace StringMate.Generators
         }
 
 
-        public string EqualTo(string leftOperand, string rightOperand,
-            bool preserveLeftOperandCase = true, bool preserveRightOperandCase = true
+        public string EqualTo(string leftOperand, string rightOperand, bool preserveLeftOperandCase = true
         )
         {
-            return string.Concat(OperandHandler(leftOperand, preserveLeftOperandCase), EqualSign,
-                OperandHandler(rightOperand, preserveRightOperandCase));
+            return string.Concat(
+                OperandHandler(leftOperand, preserveLeftOperandCase),
+                EqualSign,
+                SqlString(rightOperand)
+            );
         }
 
 
@@ -124,24 +125,32 @@ namespace StringMate.Generators
 
         public string EqualTo(string leftOperand, Enum rightOperand, bool preserveLeftOperandCase = true)
         {
-            return string.Concat(OperandHandler(leftOperand, preserveLeftOperandCase), EqualSign,
-                EnumValueToString(rightOperand));
+            return string.Concat(
+                OperandHandler(leftOperand, preserveLeftOperandCase),
+                EqualSign,
+                EnumValueToString(rightOperand)
+            );
         }
 
 
-        public string GreaterThan(string leftOperand, string rightOperand,
-            bool preserveLeftOperandCase = true, bool preserveRightOperandCase = true)
+        public string GreaterThan(string leftOperand, string rightOperand, bool preserveLeftOperandCase = true)
         {
-            return string.Concat(OperandHandler(leftOperand, preserveLeftOperandCase), GreaterThanSign,
-                OperandHandler(rightOperand, preserveRightOperandCase));
+            return string.Concat(
+                OperandHandler(leftOperand, preserveLeftOperandCase),
+                GreaterThanSign,
+                SqlString(rightOperand)
+            );
         }
 
 
         public string GreaterThan(string leftOperand, Enum rightOperand,
             bool preserveLeftOperandCase = true)
         {
-            return string.Concat(OperandHandler(leftOperand, preserveLeftOperandCase), GreaterThanSign,
-                EnumValueToString(rightOperand));
+            return string.Concat(
+                OperandHandler(leftOperand, preserveLeftOperandCase),
+                GreaterThanSign,
+                EnumValueToString(rightOperand)
+            );
         }
 
         public string GreaterThan(string leftOperand, int rightOperand, bool preserveLeftOperandCase = true)
@@ -150,42 +159,51 @@ namespace StringMate.Generators
         }
 
 
-        public string GreaterThanOrEqual(string leftOperand, string rightOperand,
-            bool preserveLeftOperandCase = true, bool preserveRightOperandCase = true)
+        public string GreaterThanOrEqual(string leftOperand, string rightOperand, bool preserveLeftOperandCase = true)
         {
-            return string.Concat(OperandHandler(leftOperand, preserveLeftOperandCase), GreaterThanOrEqualSign,
-                OperandHandler(rightOperand, preserveRightOperandCase));
+            return string.Concat(
+                OperandHandler(leftOperand, preserveLeftOperandCase),
+                GreaterThanOrEqualSign,
+                SqlString(rightOperand)
+            );
         }
 
 
-        public string GreaterThanOrEqual(string leftOperand, Enum rightOperand,
-            bool preserveLeftOperandCase = true)
+        public string GreaterThanOrEqual(string leftOperand, Enum rightOperand, bool preserveLeftOperandCase = true)
         {
-            return string.Concat(OperandHandler(leftOperand, preserveLeftOperandCase), GreaterThanOrEqualSign,
-                EnumValueToString(rightOperand));
+            return string.Concat(
+                OperandHandler(leftOperand, preserveLeftOperandCase),
+                GreaterThanOrEqualSign,
+                EnumValueToString(rightOperand)
+            );
         }
 
-        public string GreaterThanOrEqual(string leftOperand, int rightOperand,
-            bool preserveLeftOperandCase = true)
+        public string GreaterThanOrEqual(string leftOperand, int rightOperand, bool preserveLeftOperandCase = true)
         {
-            return string.Concat(OperandHandler(leftOperand, preserveLeftOperandCase), GreaterThanOrEqualSign,
+            return string.Concat(
+                OperandHandler(leftOperand, preserveLeftOperandCase),
+                GreaterThanOrEqualSign,
                 rightOperand);
         }
 
 
-        public string LessThan(string leftOperand, string rightOperand,
-            bool preserveLeftOperandCase = true, bool preserveRightOperandCase = true)
+        public string LessThan(string leftOperand, string rightOperand, bool preserveLeftOperandCase = true)
         {
-            return string.Concat(OperandHandler(leftOperand, preserveLeftOperandCase), LessThanSign,
-                OperandHandler(rightOperand, preserveRightOperandCase));
+            return string.Concat(
+                OperandHandler(leftOperand, preserveLeftOperandCase),
+                LessThanSign,
+                SqlString(rightOperand)
+            );
         }
 
 
-        public string LessThan(string leftOperand, Enum rightOperand,
-            bool preserveLeftOperandCase = true)
+        public string LessThan(string leftOperand, Enum rightOperand, bool preserveLeftOperandCase = true)
         {
-            return string.Concat(OperandHandler(leftOperand, preserveLeftOperandCase), LessThanSign,
-                EnumValueToString(rightOperand));
+            return string.Concat(
+                OperandHandler(leftOperand, preserveLeftOperandCase),
+                LessThanSign,
+                EnumValueToString(rightOperand)
+            );
         }
 
         public string LessThan(string leftOperand, int rightOperand, bool preserveLeftOperandCase = true)
@@ -194,33 +212,56 @@ namespace StringMate.Generators
         }
 
 
-        public string LessThanOrEqual(string leftOperand, string rightOperand,
-            bool preserveLeftOperandCase = true, bool preserveRightOperandCase = true)
+        public string LessThanOrEqual(string leftOperand, string rightOperand, bool preserveLeftOperandCase = true)
         {
-            return string.Concat(OperandHandler(leftOperand, preserveLeftOperandCase), LessThanOrEqualSign,
-                OperandHandler(rightOperand, preserveRightOperandCase));
+            return string.Concat(
+                OperandHandler(leftOperand, preserveLeftOperandCase),
+                LessThanOrEqualSign,
+                SqlString(rightOperand)
+            );
         }
 
-
-        public string LessThanOrEqual(string leftOperand, Enum rightOperand,
-            bool preserveLeftOperandCase = true)
+        public string LessThanOrEqual(string leftOperand, Enum rightOperand, bool preserveLeftOperandCase = true)
         {
-            return string.Concat(OperandHandler(leftOperand, preserveLeftOperandCase), LessThanOrEqualSign,
-                EnumValueToString(rightOperand));
+            return string.Concat(
+                OperandHandler(leftOperand, preserveLeftOperandCase),
+                LessThanOrEqualSign,
+                EnumValueToString(rightOperand)
+            );
         }
 
-        public string LessThanOrEqual(string leftOperand, int rightOperand,
-            bool preserveLeftOperandCase = true)
+        public string LessThanOrEqual(string leftOperand, int rightOperand, bool preserveLeftOperandCase = true)
         {
-            return string.Concat(OperandHandler(leftOperand, preserveLeftOperandCase), LessThanOrEqualSign,
+            return string.Concat(
+                OperandHandler(leftOperand, preserveLeftOperandCase),
+                LessThanOrEqualSign,
                 rightOperand);
         }
 
 
+        public static string Between(string leftOperand, string rightOperand)
+        {
+            return string.Concat(BetweenSign, SqlString(leftOperand), AndSign, SqlString(rightOperand));
+        }
+
+
+        public static string Between(int leftOperand, int rightOperand)
+        {
+            return string.Concat(BetweenSign, leftOperand, AndSign, rightOperand);
+        }
+
+        public static string Between(double leftOperand, double rightOperand)
+        {
+            return string.Concat(BetweenSign, leftOperand, AndSign, rightOperand);
+        }
+
         private string OperandHandler(string value, bool preserveCase)
         {
             if (_preserveCase is not null)
+            {
                 return (bool)_preserveCase ? PreserveCase(value) : value;
+            }
+
             return preserveCase ? PreserveCase(value) : value;
         }
 
@@ -228,16 +269,16 @@ namespace StringMate.Generators
             Convert.ToInt32(value).ToString();
 
 
-        private string CommaSeparatedCollectionData(ICollection<Enum> collection) =>
+        private static string CommaSeparatedCollectionData(ICollection<Enum> collection) =>
             CommaSeparatedCollectionDataMaker(collection, Convert.ToInt32);
 
 
-        private string CommaSeparatedCollectionData(ICollection<int> collection) =>
+        private static string CommaSeparatedCollectionData(ICollection<int> collection) =>
             CommaSeparatedCollectionDataMaker<int, int>(collection);
 
 
-        private string CommaSeparatedCollectionData(ICollection<string> collection) =>
-            CommaSeparatedCollectionDataMaker(collection, PreserveCase);
+        private static string CommaSeparatedCollectionData(ICollection<string> collection) =>
+            CommaSeparatedCollectionDataMaker(collection, SqlString);
 
 
         private static string CommaSeparatedCollectionDataMaker<TCollection, TValue>(
@@ -248,20 +289,20 @@ namespace StringMate.Generators
             var size = collection.Count;
             var counter = 0;
 
-            foreach (var x in collection)
+            foreach (var item in collection)
             {
                 if (counter >= 1 && counter != size)
                 {
-                    builder.Append(',');
+                    builder.Append(", ");
                 }
 
                 if (logic is not null)
                 {
-                    builder.Append(logic(x));
+                    builder.Append(logic(item));
                 }
                 else
                 {
-                    builder.Append(x);
+                    builder.Append(item);
                 }
 
                 counter += 1;
@@ -272,6 +313,8 @@ namespace StringMate.Generators
 
 
         private static string WrapWithParentheses(string text) => $"({text})";
+
+        private static string SqlString(string text) => $"\'{text}\'";
 
         private string PreserveCase(string text) =>
             _relationalDatabase switch
