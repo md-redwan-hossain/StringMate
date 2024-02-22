@@ -9,12 +9,12 @@
         <Description>`StringMate` offers a collection of valuable classes designed for working with the C# `string` type.</Description>
         <PackageProjectUrl>https://github.com/md-redwan-hossain/StringMate</PackageProjectUrl>
         <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-
         <RepositoryUrl>https://github.com/md-redwan-hossain/StringMate</RepositoryUrl>
         <Version>0.0.4</Version>
         <PackageIcon>logo.png</PackageIcon>
         <PackageTags>validation validation-library validator string-validation</PackageTags>
         <PackageReadmeFile>README.md</PackageReadmeFile>
+        <DocumentationFile Condition="'$(Configuration)'=='Release'">bin\$(Configuration)\$(TargetFramework)\StringMate.xml</DocumentationFile>
     </PropertyGroup>
 
     <ItemGroup>
