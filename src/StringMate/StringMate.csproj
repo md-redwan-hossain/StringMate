@@ -15,6 +15,7 @@
         <PackageTags>validation validation-library validator string-validation</PackageTags>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <DocumentationFile Condition="'$(Configuration)'=='Release'">bin\$(Configuration)\$(TargetFramework)\StringMate.xml</DocumentationFile>
+        <PackageReleaseNotes>Added documentation support and HtmlFriendlyTransformation class</PackageReleaseNotes>
     </PropertyGroup>
 
     <ItemGroup>
