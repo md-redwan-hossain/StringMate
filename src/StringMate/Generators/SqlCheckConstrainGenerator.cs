@@ -11,15 +11,16 @@ namespace StringMate.Generators
     /// </summary>
     public class SqlCheckConstrainGenerator
     {
-        private readonly bool? _preserveCase;
+        private readonly bool _delimitStringGlobal;
         private readonly RelationalDatabase _relationalDatabase;
 
-        /// <param name="relationalDatabase">determines the preserveCase symbols based on database.</param>
-        /// <param name="preserveCase">overrides preserveCase related method parameters.</param>
-        public SqlCheckConstrainGenerator(RelationalDatabase relationalDatabase, bool? preserveCase = null)
+
+        /// <param name="relationalDatabase">determines the delimitStringGlobal symbols based on database.</param>
+        /// <param name="delimitStringGlobal">any method parameter of this class which is related to string delimitation will override <c>delimitStringGlobal</c>. By default, <c>delimitStringGlobal</c> is set to true. </param>
+        public SqlCheckConstrainGenerator(RelationalDatabase relationalDatabase, bool delimitStringGlobal = true)
         {
             _relationalDatabase = relationalDatabase;
-            _preserveCase = preserveCase;
+            _delimitStringGlobal = delimitStringGlobal;
         }
 
         private const string EqualSign = " = ";
@@ -52,256 +53,269 @@ namespace StringMate.Generators
         }
 
 
-        public string In(string leftOperand, ICollection<int> rightOperands, bool preserveLeftOperandCase = true)
+        public string In(string leftOperand, ICollection<int> rightOperands, bool? delimitLeftOperand = null)
         {
-            return string.Concat(OperandHandler(leftOperand, preserveLeftOperandCase), InSign,
+            return string.Concat(OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobal), InSign,
                 WrapWithParentheses(CommaSeparatedCollectionData(rightOperands)));
         }
 
 
-        public string In(string leftOperand, ICollection<string> rightOperands, bool preserveLeftOperandCase = true)
+        public string In(string leftOperand, ICollection<string> rightOperands, bool? delimitLeftOperand = null)
         {
-            return string.Concat(OperandHandler(leftOperand, preserveLeftOperandCase), InSign,
+            return string.Concat(OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobal), InSign,
                 WrapWithParentheses(CommaSeparatedCollectionData(rightOperands)));
         }
 
-        public string In(string leftOperand, ICollection<Enum> rightOperands, bool preserveLeftOperandCase = true)
+        public string In(string leftOperand, ICollection<Enum> rightOperands, bool? delimitLeftOperand = null)
         {
-            return string.Concat(OperandHandler(leftOperand, preserveLeftOperandCase), InSign,
-                WrapWithParentheses(CommaSeparatedCollectionData(rightOperands)));
-        }
-
-
-        public string NotIn(string leftOperand, ICollection<int> rightOperands, bool preserveLeftOperandCase = true)
-        {
-            return string.Concat(OperandHandler(leftOperand, preserveLeftOperandCase), NotInSign,
+            return string.Concat(OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobal), InSign,
                 WrapWithParentheses(CommaSeparatedCollectionData(rightOperands)));
         }
 
 
-        public string NotIn(string leftOperand, ICollection<string> rightOperands, bool preserveLeftOperandCase = true)
+        public string NotIn(string leftOperand, ICollection<int> rightOperands, bool? delimitLeftOperand = null)
         {
-            return string.Concat(OperandHandler(leftOperand, preserveLeftOperandCase), NotInSign,
+            return string.Concat(OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobal), NotInSign,
                 WrapWithParentheses(CommaSeparatedCollectionData(rightOperands)));
         }
 
-        public string NotIn(string leftOperand, ICollection<Enum> rightOperands, bool preserveLeftOperandCase = true)
+
+        public string NotIn(string leftOperand, ICollection<string> rightOperands, bool? delimitLeftOperand = null)
         {
-            return string.Concat(OperandHandler(leftOperand, preserveLeftOperandCase), NotInSign,
+            return string.Concat(OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobal), NotInSign,
                 WrapWithParentheses(CommaSeparatedCollectionData(rightOperands)));
         }
 
-        public string NotEqualTo(string leftOperand, string rightOperand, bool preserveLeftOperandCase = true
-        )
+        public string NotIn(string leftOperand, ICollection<Enum> rightOperands, bool? delimitLeftOperand = null)
+        {
+            return string.Concat(OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobal), NotInSign,
+                WrapWithParentheses(CommaSeparatedCollectionData(rightOperands)));
+        }
+
+        public string NotEqualTo(string leftOperand, string rightOperand, SqlOperandType rightOperandType,
+            bool? delimitLeftOperand = null, bool? delimitRightOperand = null)
         {
             return string.Concat(
-                OperandHandler(leftOperand, preserveLeftOperandCase),
+                OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobal),
                 NotEqualSign,
-                SqlString(rightOperand)
+                rightOperandType == SqlOperandType.Column
+                    ? OperandHandler(rightOperand, delimitRightOperand ?? _delimitStringGlobal)
+                    : SqlString(rightOperand)
             );
         }
 
 
-        public string NotEqualTo(string leftOperand, Enum rightOperand, bool preserveLeftOperandCase = true)
+        public string NotEqualTo(string leftOperand, Enum rightOperand, bool? delimitLeftOperand = null)
         {
-            return string.Concat(OperandHandler(leftOperand, preserveLeftOperandCase), NotEqualSign,
+            return string.Concat(OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobal), NotEqualSign,
                 EnumValueToString(rightOperand));
         }
 
-        public string NotEqualTo(string leftOperand, int rightOperand, bool preserveLeftOperandCase = true)
+        public string NotEqualTo(string leftOperand, int rightOperand, bool? delimitLeftOperand = null)
         {
-            return string.Concat(OperandHandler(leftOperand, preserveLeftOperandCase), NotEqualSign, rightOperand);
+            return string.Concat(OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobal), NotEqualSign,
+                rightOperand);
         }
 
 
-        public string EqualTo(string leftOperand, string rightOperand, bool preserveLeftOperandCase = true
-        )
+        public string EqualTo(string leftOperand, string rightOperand, SqlOperandType rightOperandType,
+            bool? delimitLeftOperand = null, bool? delimitRightOperand = null)
         {
             return string.Concat(
-                OperandHandler(leftOperand, preserveLeftOperandCase),
+                OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobal),
                 EqualSign,
-                SqlString(rightOperand)
+                rightOperandType == SqlOperandType.Column
+                    ? OperandHandler(rightOperand, delimitRightOperand ?? _delimitStringGlobal)
+                    : SqlString(rightOperand)
             );
         }
 
 
-        public string EqualTo(string leftOperand, int rightOperand, bool preserveLeftOperandCase = true)
+        public string EqualTo(string leftOperand, int rightOperand, bool? delimitLeftOperand = null)
         {
-            return string.Concat(OperandHandler(leftOperand, preserveLeftOperandCase), EqualSign, rightOperand);
+            return string.Concat(OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobal), EqualSign,
+                rightOperand);
         }
 
 
-        public string EqualTo(string leftOperand, Enum rightOperand, bool preserveLeftOperandCase = true)
+        public string EqualTo(string leftOperand, Enum rightOperand, bool? delimitLeftOperand = null)
         {
             return string.Concat(
-                OperandHandler(leftOperand, preserveLeftOperandCase),
+                OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobal),
                 EqualSign,
                 EnumValueToString(rightOperand)
             );
         }
 
 
-        public string GreaterThan(string leftOperand, string rightOperand, bool preserveLeftOperandCase = true)
+        public string GreaterThan(string leftOperand, string rightOperand, SqlOperandType rightOperandType,
+            bool? delimitLeftOperand = null, bool? delimitRightOperand = null)
         {
             return string.Concat(
-                OperandHandler(leftOperand, preserveLeftOperandCase),
+                OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobal),
                 GreaterThanSign,
-                SqlString(rightOperand)
+                rightOperandType == SqlOperandType.Column
+                    ? OperandHandler(rightOperand, delimitRightOperand ?? _delimitStringGlobal)
+                    : SqlString(rightOperand)
             );
         }
 
 
         public string GreaterThan(string leftOperand, Enum rightOperand,
-            bool preserveLeftOperandCase = true)
+            bool? delimitLeftOperand = null)
         {
             return string.Concat(
-                OperandHandler(leftOperand, preserveLeftOperandCase),
+                OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobal),
                 GreaterThanSign,
                 EnumValueToString(rightOperand)
             );
         }
 
-        public string GreaterThan(string leftOperand, int rightOperand, bool preserveLeftOperandCase = true)
+        public string GreaterThan(string leftOperand, int rightOperand, bool? delimitLeftOperand = null)
         {
-            return string.Concat(OperandHandler(leftOperand, preserveLeftOperandCase), GreaterThanSign, rightOperand);
+            return string.Concat(OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobal),
+                GreaterThanSign, rightOperand);
         }
 
 
-        public string GreaterThanOrEqual(string leftOperand, string rightOperand, bool preserveLeftOperandCase = true)
+        public string GreaterThanOrEqual(string leftOperand, string rightOperand, SqlOperandType rightOperandType,
+            bool? delimitLeftOperand = null, bool? delimitRightOperand = null)
         {
             return string.Concat(
-                OperandHandler(leftOperand, preserveLeftOperandCase),
+                OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobal),
                 GreaterThanOrEqualSign,
-                SqlString(rightOperand)
+                rightOperandType == SqlOperandType.Column
+                    ? OperandHandler(rightOperand, delimitRightOperand ?? _delimitStringGlobal)
+                    : SqlString(rightOperand)
             );
         }
 
 
-        public string GreaterThanOrEqual(string leftOperand, Enum rightOperand, bool preserveLeftOperandCase = true)
+        public string GreaterThanOrEqual(string leftOperand, Enum rightOperand, bool? delimitLeftOperand = null)
         {
             return string.Concat(
-                OperandHandler(leftOperand, preserveLeftOperandCase),
+                OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobal),
                 GreaterThanOrEqualSign,
                 EnumValueToString(rightOperand)
             );
         }
 
-        public string GreaterThanOrEqual(string leftOperand, int rightOperand, bool preserveLeftOperandCase = true)
+        public string GreaterThanOrEqual(string leftOperand, int rightOperand, bool? delimitLeftOperand = null)
         {
             return string.Concat(
-                OperandHandler(leftOperand, preserveLeftOperandCase),
+                OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobal),
                 GreaterThanOrEqualSign,
                 rightOperand);
         }
 
 
-        public string LessThan(string leftOperand, string rightOperand, bool preserveLeftOperandCase = true)
+        public string LessThan(string leftOperand, string rightOperand, SqlOperandType rightOperandType,
+            bool? delimitLeftOperand = null, bool? delimitRightOperand = null)
         {
             return string.Concat(
-                OperandHandler(leftOperand, preserveLeftOperandCase),
+                OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobal),
                 LessThanSign,
-                SqlString(rightOperand)
+                rightOperandType == SqlOperandType.Column
+                    ? OperandHandler(rightOperand, delimitRightOperand ?? _delimitStringGlobal)
+                    : SqlString(rightOperand)
             );
         }
 
 
-        public string LessThan(string leftOperand, Enum rightOperand, bool preserveLeftOperandCase = true)
+        public string LessThan(string leftOperand, Enum rightOperand, bool? delimitLeftOperand = null)
         {
             return string.Concat(
-                OperandHandler(leftOperand, preserveLeftOperandCase),
+                OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobal),
                 LessThanSign,
                 EnumValueToString(rightOperand)
             );
         }
 
-        public string LessThan(string leftOperand, int rightOperand, bool preserveLeftOperandCase = true)
+        public string LessThan(string leftOperand, int rightOperand, bool? delimitLeftOperand = null)
         {
-            return string.Concat(OperandHandler(leftOperand, preserveLeftOperandCase), LessThanSign, rightOperand);
+            return string.Concat(OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobal), LessThanSign,
+                rightOperand);
         }
 
 
-        public string LessThanOrEqual(string leftOperand, string rightOperand, bool preserveLeftOperandCase = true)
+        public string LessThanOrEqual(string leftOperand, string rightOperand, SqlOperandType rightOperandType,
+            bool? delimitLeftOperand = null, bool? delimitRightOperand = null)
         {
             return string.Concat(
-                OperandHandler(leftOperand, preserveLeftOperandCase),
+                OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobal),
                 LessThanOrEqualSign,
-                SqlString(rightOperand)
+                rightOperandType == SqlOperandType.Column
+                    ? OperandHandler(rightOperand, delimitRightOperand ?? _delimitStringGlobal)
+                    : SqlString(rightOperand)
             );
         }
 
-        public string LessThanOrEqual(string leftOperand, Enum rightOperand, bool preserveLeftOperandCase = true)
+        public string LessThanOrEqual(string leftOperand, Enum rightOperand, bool? delimitLeftOperand = null)
         {
             return string.Concat(
-                OperandHandler(leftOperand, preserveLeftOperandCase),
+                OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobal),
                 LessThanOrEqualSign,
                 EnumValueToString(rightOperand)
             );
         }
 
-        public string LessThanOrEqual(string leftOperand, int rightOperand, bool preserveLeftOperandCase = true)
+        public string LessThanOrEqual(string leftOperand, int rightOperand, bool? delimitLeftOperand = null)
         {
             return string.Concat(
-                OperandHandler(leftOperand, preserveLeftOperandCase),
+                OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobal),
                 LessThanOrEqualSign,
                 rightOperand);
         }
 
 
         public string Between(string columnName, string leftOperand,
-            string rightOperand, bool preserveColumnNameCase = true)
+            string rightOperand, bool? delimitColumnName = null)
         {
-            return string.Concat(OperandHandler(columnName, preserveColumnNameCase),
+            return string.Concat(OperandHandler(columnName, delimitColumnName ?? _delimitStringGlobal),
                 BetweenSign, SqlString(leftOperand), AndSign, SqlString(rightOperand));
         }
 
 
         public string Between(string columnName, int leftOperand,
-            int rightOperand, bool preserveColumnNameCase = true)
+            int rightOperand, bool? delimitColumnName = null)
         {
             return string.Concat(
-                OperandHandler(columnName, preserveColumnNameCase),
+                OperandHandler(columnName, delimitColumnName ?? _delimitStringGlobal),
                 BetweenSign, leftOperand, AndSign, rightOperand);
         }
 
         public string Between(string columnName, double leftOperand,
-            double rightOperand, bool preserveColumnNameCase = true)
+            double rightOperand, bool? delimitColumnName = null)
         {
-            return string.Concat(OperandHandler(columnName, preserveColumnNameCase),
+            return string.Concat(OperandHandler(columnName, delimitColumnName ?? _delimitStringGlobal),
                 BetweenSign, leftOperand, AndSign, rightOperand);
         }
 
         public string NotBetween(string columnName, string leftOperand,
-            string rightOperand, bool preserveColumnNameCase = true)
+            string rightOperand, bool? delimitColumnName = null)
         {
-            return string.Concat(OperandHandler(columnName, preserveColumnNameCase),
+            return string.Concat(OperandHandler(columnName, delimitColumnName ?? _delimitStringGlobal),
                 NotBetweenSign, SqlString(leftOperand), AndSign, SqlString(rightOperand));
         }
 
 
         public string NotBetween(string columnName, int leftOperand,
-            int rightOperand, bool preserveColumnNameCase = true)
+            int rightOperand, bool? delimitColumnName = null)
         {
-            return string.Concat(OperandHandler(columnName, preserveColumnNameCase),
+            return string.Concat(OperandHandler(columnName, delimitColumnName ?? _delimitStringGlobal),
                 NotBetweenSign, leftOperand, AndSign, rightOperand);
         }
 
         public string NotBetween(string columnName, double leftOperand,
-            double rightOperand, bool preserveColumnNameCase = true)
+            double rightOperand, bool? delimitColumnName = null)
         {
-            return string.Concat(OperandHandler(columnName, preserveColumnNameCase),
+            return string.Concat(OperandHandler(columnName, delimitColumnName ?? _delimitStringGlobal),
                 NotBetweenSign, leftOperand, AndSign, rightOperand);
         }
 
 
-        private string OperandHandler(string value, bool preserveCase)
-        {
-            if (_preserveCase is not null)
-            {
-                return (bool)_preserveCase ? PreserveCase(value) : value;
-            }
-
-            return preserveCase ? PreserveCase(value) : value;
-        }
+        private string OperandHandler(string value, bool delimit) =>
+            delimit ? DelimitString(value) : value;
 
         private static string EnumValueToString(IFormattable value) =>
             Convert.ToInt32(value).ToString();
@@ -354,7 +368,7 @@ namespace StringMate.Generators
 
         private static string SqlString(string text) => $"\'{text}\'";
 
-        private string PreserveCase(string text) =>
+        private string DelimitString(string text) =>
             _relationalDatabase switch
             {
                 RelationalDatabase.PostgreSql => $"\"{text}\"",

@@ -10,12 +10,13 @@
         <PackageProjectUrl>https://github.com/md-redwan-hossain/StringMate</PackageProjectUrl>
         <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
         <RepositoryUrl>https://github.com/md-redwan-hossain/StringMate</RepositoryUrl>
-        <Version>0.0.5</Version>
+        <Version>0.0.6</Version>
         <PackageIcon>logo.png</PackageIcon>
         <PackageTags>validation validation-library validator string-validation</PackageTags>
         <PackageReadmeFile>README.md</PackageReadmeFile>
+        <NoWarn>CS1591</NoWarn>
         <DocumentationFile Condition="'$(Configuration)'=='Release'">bin\$(Configuration)\$(TargetFramework)\StringMate.xml</DocumentationFile>
-        <PackageReleaseNotes>Added documentation support and HtmlFriendlyTransformation class</PackageReleaseNotes>
+        <PackageReleaseNotes>Fixed critical bug in  SqlCheckConstraintGenerator class</PackageReleaseNotes>
     </PropertyGroup>
 
     <ItemGroup>
