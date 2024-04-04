@@ -119,7 +119,7 @@ namespace StringMate.Generators
             bool? delimitLeftOperand = null)
         {
             var leftOperandWithLogic = OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobalLevel);
-            if (leftOperandSqlDataType == SqlDataType.VarChar)
+            if (leftOperandSqlDataType == SqlDataType.VarChar || leftOperandSqlDataType == SqlDataType.Text)
             {
                 leftOperandWithLogic = LengthOperatorHandler(leftOperandWithLogic);
             }
@@ -145,7 +145,7 @@ namespace StringMate.Generators
             bool? delimitLeftOperand = null)
         {
             var leftOperandWithLogic = OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobalLevel);
-            if (leftOperandSqlDataType == SqlDataType.VarChar)
+            if (leftOperandSqlDataType == SqlDataType.VarChar || leftOperandSqlDataType == SqlDataType.Text)
             {
                 leftOperandWithLogic = LengthOperatorHandler(leftOperandWithLogic);
             }
@@ -191,7 +191,7 @@ namespace StringMate.Generators
             bool? delimitLeftOperand = null)
         {
             var leftOperandWithLogic = OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobalLevel);
-            if (leftOperandSqlDataType == SqlDataType.VarChar)
+            if (leftOperandSqlDataType == SqlDataType.VarChar || leftOperandSqlDataType == SqlDataType.Text)
             {
                 leftOperandWithLogic = LengthOperatorHandler(leftOperandWithLogic);
             }
@@ -226,7 +226,7 @@ namespace StringMate.Generators
             bool? delimitLeftOperand = null)
         {
             var leftOperandWithLogic = OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobalLevel);
-            if (leftOperandSqlDataType == SqlDataType.VarChar)
+            if (leftOperandSqlDataType == SqlDataType.VarChar || leftOperandSqlDataType == SqlDataType.Text)
             {
                 leftOperandWithLogic = LengthOperatorHandler(leftOperandWithLogic);
             }
@@ -261,7 +261,7 @@ namespace StringMate.Generators
             bool? delimitLeftOperand = null)
         {
             var leftOperandWithLogic = OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobalLevel);
-            if (leftOperandSqlDataType == SqlDataType.VarChar)
+            if (leftOperandSqlDataType == SqlDataType.VarChar || leftOperandSqlDataType == SqlDataType.Text)
             {
                 leftOperandWithLogic = LengthOperatorHandler(leftOperandWithLogic);
             }
@@ -295,7 +295,7 @@ namespace StringMate.Generators
             bool? delimitLeftOperand = null)
         {
             var leftOperandWithLogic = OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobalLevel);
-            if (leftOperandSqlDataType == SqlDataType.VarChar)
+            if (leftOperandSqlDataType == SqlDataType.VarChar || leftOperandSqlDataType == SqlDataType.Text)
             {
                 leftOperandWithLogic = LengthOperatorHandler(leftOperandWithLogic);
             }
