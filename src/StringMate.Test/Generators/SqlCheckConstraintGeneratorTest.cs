@@ -37,10 +37,20 @@ public class SqlCheckConstraintGeneratorTest
     {
         var cc = new SqlCheckConstrainGenerator(RDBMS.MySql);
         const string sql = "CHAR_LENGTH(`sell_price`) > 100";
-        var testSql = cc.GreaterThan("sell_price", 100);
+        var testSql = cc.GreaterThan("sell_price", 100, SqlDataType.VarChar);
         testSql.ShouldBe(sql);
     }
 
+    
+    [Fact]
+    public void GreaterThanCheck_Int_As_Value()
+    {
+        var cc = new SqlCheckConstrainGenerator(RDBMS.MySql);
+        const string sql = "`sell_price` > 100";
+        var testSql = cc.GreaterThan("sell_price", 100, SqlDataType.Int);
+        testSql.ShouldBe(sql);
+    }
+    
     [Fact]
     public void GreaterThanCheck_String_As_Column_DelimitLeftOperand()
     {

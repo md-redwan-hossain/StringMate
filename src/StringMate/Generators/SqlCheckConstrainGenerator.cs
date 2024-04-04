@@ -115,15 +115,16 @@ namespace StringMate.Generators
                 EnumValueToString(rightOperand));
         }
 
-        public string NotEqualTo(string leftOperand, int rightOperand, bool? delimitLeftOperand = null)
+        public string NotEqualTo(string leftOperand, int rightOperand, SqlDataType leftOperandSqlDataType,
+            bool? delimitLeftOperand = null)
         {
-            var originalLeftOperand =
-                OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobalLevel);
+            var leftOperandWithLogic = OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobalLevel);
+            if (leftOperandSqlDataType == SqlDataType.VarChar)
+            {
+                leftOperandWithLogic = LengthOperatorHandler(leftOperandWithLogic);
+            }
 
-            return string.Concat(
-                LengthOperatorHandler(originalLeftOperand),
-                NotEqualSign,
-                rightOperand);
+            return string.Concat(leftOperandWithLogic, NotEqualSign, rightOperand);
         }
 
 
@@ -140,15 +141,16 @@ namespace StringMate.Generators
         }
 
 
-        public string EqualTo(string leftOperand, int rightOperand, bool? delimitLeftOperand = null)
+        public string EqualTo(string leftOperand, int rightOperand, SqlDataType leftOperandSqlDataType,
+            bool? delimitLeftOperand = null)
         {
-            var originalLeftOperand =
-                OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobalLevel);
+            var leftOperandWithLogic = OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobalLevel);
+            if (leftOperandSqlDataType == SqlDataType.VarChar)
+            {
+                leftOperandWithLogic = LengthOperatorHandler(leftOperandWithLogic);
+            }
 
-            return string.Concat(
-                LengthOperatorHandler(originalLeftOperand),
-                EqualSign,
-                rightOperand);
+            return string.Concat(leftOperandWithLogic, EqualSign, rightOperand);
         }
 
 
@@ -185,14 +187,16 @@ namespace StringMate.Generators
             );
         }
 
-        public string GreaterThan(string leftOperand, int rightOperand, bool? delimitLeftOperand = null)
+        public string GreaterThan(string leftOperand, int rightOperand, SqlDataType leftOperandSqlDataType,
+            bool? delimitLeftOperand = null)
         {
-            var originalLeftOperand =
-                OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobalLevel);
+            var leftOperandWithLogic = OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobalLevel);
+            if (leftOperandSqlDataType == SqlDataType.VarChar)
+            {
+                leftOperandWithLogic = LengthOperatorHandler(leftOperandWithLogic);
+            }
 
-            return string.Concat(
-                LengthOperatorHandler(originalLeftOperand),
-                GreaterThanSign, rightOperand);
+            return string.Concat(leftOperandWithLogic, GreaterThanSign, rightOperand);
         }
 
 
@@ -218,15 +222,16 @@ namespace StringMate.Generators
             );
         }
 
-        public string GreaterThanOrEqual(string leftOperand, int rightOperand, bool? delimitLeftOperand = null)
+        public string GreaterThanOrEqual(string leftOperand, int rightOperand, SqlDataType leftOperandSqlDataType,
+            bool? delimitLeftOperand = null)
         {
-            var originalLeftOperand =
-                OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobalLevel);
+            var leftOperandWithLogic = OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobalLevel);
+            if (leftOperandSqlDataType == SqlDataType.VarChar)
+            {
+                leftOperandWithLogic = LengthOperatorHandler(leftOperandWithLogic);
+            }
 
-            return string.Concat(
-                LengthOperatorHandler(originalLeftOperand),
-                GreaterThanOrEqualSign,
-                rightOperand);
+            return string.Concat(leftOperandWithLogic, GreaterThanOrEqualSign, rightOperand);
         }
 
 
@@ -252,15 +257,16 @@ namespace StringMate.Generators
             );
         }
 
-        public string LessThan(string leftOperand, int rightOperand, bool? delimitLeftOperand = null)
+        public string LessThan(string leftOperand, int rightOperand, SqlDataType leftOperandSqlDataType,
+            bool? delimitLeftOperand = null)
         {
-            var originalLeftOperand =
-                OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobalLevel);
+            var leftOperandWithLogic = OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobalLevel);
+            if (leftOperandSqlDataType == SqlDataType.VarChar)
+            {
+                leftOperandWithLogic = LengthOperatorHandler(leftOperandWithLogic);
+            }
 
-            return string.Concat(
-                LengthOperatorHandler(originalLeftOperand),
-                LessThanSign,
-                rightOperand);
+            return string.Concat(leftOperandWithLogic, LessThanSign, rightOperand);
         }
 
 
@@ -285,15 +291,16 @@ namespace StringMate.Generators
             );
         }
 
-        public string LessThanOrEqual(string leftOperand, int rightOperand, bool? delimitLeftOperand = null)
+        public string LessThanOrEqual(string leftOperand, int rightOperand, SqlDataType leftOperandSqlDataType,
+            bool? delimitLeftOperand = null)
         {
-            var originalLeftOperand =
-                OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobalLevel);
+            var leftOperandWithLogic = OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobalLevel);
+            if (leftOperandSqlDataType == SqlDataType.VarChar)
+            {
+                leftOperandWithLogic = LengthOperatorHandler(leftOperandWithLogic);
+            }
 
-            return string.Concat(
-                LengthOperatorHandler(originalLeftOperand),
-                LessThanOrEqualSign,
-                rightOperand);
+            return string.Concat(leftOperandWithLogic, LessThanOrEqualSign, rightOperand);
         }
 
 
