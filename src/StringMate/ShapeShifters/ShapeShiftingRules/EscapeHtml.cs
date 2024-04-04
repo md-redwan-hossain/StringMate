@@ -2,7 +2,7 @@ using System.Text;
 
 namespace StringMate.ShapeShifters.ShapeShiftingRules
 {
-    internal static class Escape
+    internal static class EscapeHtml
     {
         public static string Transform(string text)
         {

@@ -2,14 +2,14 @@ using StringMate.ShapeShifters;
 
 namespace StringMate.Test.ShapeShifters;
 
-public class HtmlFriendlyTransformationTest
+public class StringTransformationTest
 {
     [Fact]
     public void Escape()
     {
         const string test = """<script> alert("xss&fun"); </script>""";
         const string target = "&lt;script&gt; alert(&quot;xss&amp;fun&quot;); &lt;&#x2F;script&gt;";
-        HtmlFriendlyTransformation.Sanitize(test).ShouldBe(target);
+        StringTransformation.EscapeHtml(test).ShouldBe(target);
     }
 
 
@@ -18,6 +18,6 @@ public class HtmlFriendlyTransformationTest
     {
         const string target = """<script> alert("xss&fun"); </script>""";
         const string test = "&lt;script&gt; alert(&quot;xss&amp;fun&quot;); &lt;&#x2F;script&gt;";
-        HtmlFriendlyTransformation.UnSanitize(test).ShouldBe(target);
+        StringTransformation.UnescapeHtml(test).ShouldBe(target);
     }
 }

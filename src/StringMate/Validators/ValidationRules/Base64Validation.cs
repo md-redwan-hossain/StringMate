@@ -5,10 +5,10 @@ namespace StringMate.Validators.ValidationRules
     internal static class Base64Validation
     {
         private static readonly Regex NotBase64Regex =
-            new("[^A-Z0-9+\\/=]", RegexOptions.IgnoreCase);
+            new Regex ("[^A-Z0-9+\\/=]", RegexOptions.IgnoreCase);
 
         private static readonly Regex UrlSafeBase64Regex =
-            new("^[A-Z0-9_\\-]*$", RegexOptions.IgnoreCase);
+            new Regex("^[A-Z0-9_\\-]*$", RegexOptions.IgnoreCase);
 
 
         internal static bool Validate(string value, bool checkUrlSafety)

@@ -11,16 +11,16 @@ namespace StringMate.Generators
     /// </summary>
     public class SqlCheckConstrainGenerator
     {
-        private readonly bool _delimitStringGlobal;
-        private readonly RelationalDatabase _relationalDatabase;
+        private readonly bool _delimitStringGlobalLevel;
+        private readonly RDBMS _rdbms;
 
 
-        /// <param name="relationalDatabase">determines the delimitStringGlobal symbols based on database.</param>
-        /// <param name="delimitStringGlobal">any method parameter of this class which is related to string delimitation will override <c>delimitStringGlobal</c>. By default, <c>delimitStringGlobal</c> is set to true. </param>
-        public SqlCheckConstrainGenerator(RelationalDatabase relationalDatabase, bool delimitStringGlobal = true)
+        /// <param name="rdbms">determines the delimitStringGlobalLevel symbols based on database.</param>
+        /// <param name="delimitStringGlobalLevel">any method parameter of this class which is related to string delimitation will override <c>delimitStringGlobal</c>. By default, <c>delimitStringGlobal</c> is set to true. </param>
+        public SqlCheckConstrainGenerator(RDBMS rdbms, bool delimitStringGlobalLevel = true)
         {
-            _relationalDatabase = relationalDatabase;
-            _delimitStringGlobal = delimitStringGlobal;
+            _rdbms = rdbms;
+            _delimitStringGlobalLevel = delimitStringGlobalLevel;
         }
 
         private const string EqualSign = " = ";
@@ -55,40 +55,43 @@ namespace StringMate.Generators
 
         public string In(string leftOperand, ICollection<int> rightOperands, bool? delimitLeftOperand = null)
         {
-            return string.Concat(OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobal), InSign,
+            return string.Concat(OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobalLevel), InSign,
                 WrapWithParentheses(CommaSeparatedCollectionData(rightOperands)));
         }
 
 
         public string In(string leftOperand, ICollection<string> rightOperands, bool? delimitLeftOperand = null)
         {
-            return string.Concat(OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobal), InSign,
+            return string.Concat(OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobalLevel), InSign,
                 WrapWithParentheses(CommaSeparatedCollectionData(rightOperands)));
         }
 
         public string In(string leftOperand, ICollection<Enum> rightOperands, bool? delimitLeftOperand = null)
         {
-            return string.Concat(OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobal), InSign,
+            return string.Concat(OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobalLevel), InSign,
                 WrapWithParentheses(CommaSeparatedCollectionData(rightOperands)));
         }
 
 
         public string NotIn(string leftOperand, ICollection<int> rightOperands, bool? delimitLeftOperand = null)
         {
-            return string.Concat(OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobal), NotInSign,
+            return string.Concat(OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobalLevel),
+                NotInSign,
                 WrapWithParentheses(CommaSeparatedCollectionData(rightOperands)));
         }
 
 
         public string NotIn(string leftOperand, ICollection<string> rightOperands, bool? delimitLeftOperand = null)
         {
-            return string.Concat(OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobal), NotInSign,
+            return string.Concat(OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobalLevel),
+                NotInSign,
                 WrapWithParentheses(CommaSeparatedCollectionData(rightOperands)));
         }
 
         public string NotIn(string leftOperand, ICollection<Enum> rightOperands, bool? delimitLeftOperand = null)
         {
-            return string.Concat(OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobal), NotInSign,
+            return string.Concat(OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobalLevel),
+                NotInSign,
                 WrapWithParentheses(CommaSeparatedCollectionData(rightOperands)));
         }
 
@@ -96,10 +99,10 @@ namespace StringMate.Generators
             bool? delimitLeftOperand = null, bool? delimitRightOperand = null)
         {
             return string.Concat(
-                OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobal),
+                OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobalLevel),
                 NotEqualSign,
                 rightOperandType == SqlOperandType.Column
-                    ? OperandHandler(rightOperand, delimitRightOperand ?? _delimitStringGlobal)
+                    ? OperandHandler(rightOperand, delimitRightOperand ?? _delimitStringGlobalLevel)
                     : SqlString(rightOperand)
             );
         }
@@ -107,13 +110,19 @@ namespace StringMate.Generators
 
         public string NotEqualTo(string leftOperand, Enum rightOperand, bool? delimitLeftOperand = null)
         {
-            return string.Concat(OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobal), NotEqualSign,
+            return string.Concat(OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobalLevel),
+                NotEqualSign,
                 EnumValueToString(rightOperand));
         }
 
         public string NotEqualTo(string leftOperand, int rightOperand, bool? delimitLeftOperand = null)
         {
-            return string.Concat(OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobal), NotEqualSign,
+            var originalLeftOperand =
+                OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobalLevel);
+
+            return string.Concat(
+                LengthOperatorHandler(originalLeftOperand),
+                NotEqualSign,
                 rightOperand);
         }
 
@@ -122,10 +131,10 @@ namespace StringMate.Generators
             bool? delimitLeftOperand = null, bool? delimitRightOperand = null)
         {
             return string.Concat(
-                OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobal),
+                OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobalLevel),
                 EqualSign,
                 rightOperandType == SqlOperandType.Column
-                    ? OperandHandler(rightOperand, delimitRightOperand ?? _delimitStringGlobal)
+                    ? OperandHandler(rightOperand, delimitRightOperand ?? _delimitStringGlobalLevel)
                     : SqlString(rightOperand)
             );
         }
@@ -133,7 +142,12 @@ namespace StringMate.Generators
 
         public string EqualTo(string leftOperand, int rightOperand, bool? delimitLeftOperand = null)
         {
-            return string.Concat(OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobal), EqualSign,
+            var originalLeftOperand =
+                OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobalLevel);
+
+            return string.Concat(
+                LengthOperatorHandler(originalLeftOperand),
+                EqualSign,
                 rightOperand);
         }
 
@@ -141,7 +155,7 @@ namespace StringMate.Generators
         public string EqualTo(string leftOperand, Enum rightOperand, bool? delimitLeftOperand = null)
         {
             return string.Concat(
-                OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobal),
+                OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobalLevel),
                 EqualSign,
                 EnumValueToString(rightOperand)
             );
@@ -152,10 +166,10 @@ namespace StringMate.Generators
             bool? delimitLeftOperand = null, bool? delimitRightOperand = null)
         {
             return string.Concat(
-                OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobal),
+                OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobalLevel),
                 GreaterThanSign,
                 rightOperandType == SqlOperandType.Column
-                    ? OperandHandler(rightOperand, delimitRightOperand ?? _delimitStringGlobal)
+                    ? OperandHandler(rightOperand, delimitRightOperand ?? _delimitStringGlobalLevel)
                     : SqlString(rightOperand)
             );
         }
@@ -165,7 +179,7 @@ namespace StringMate.Generators
             bool? delimitLeftOperand = null)
         {
             return string.Concat(
-                OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobal),
+                OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobalLevel),
                 GreaterThanSign,
                 EnumValueToString(rightOperand)
             );
@@ -173,7 +187,11 @@ namespace StringMate.Generators
 
         public string GreaterThan(string leftOperand, int rightOperand, bool? delimitLeftOperand = null)
         {
-            return string.Concat(OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobal),
+            var originalLeftOperand =
+                OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobalLevel);
+
+            return string.Concat(
+                LengthOperatorHandler(originalLeftOperand),
                 GreaterThanSign, rightOperand);
         }
 
@@ -182,10 +200,10 @@ namespace StringMate.Generators
             bool? delimitLeftOperand = null, bool? delimitRightOperand = null)
         {
             return string.Concat(
-                OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobal),
+                OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobalLevel),
                 GreaterThanOrEqualSign,
                 rightOperandType == SqlOperandType.Column
-                    ? OperandHandler(rightOperand, delimitRightOperand ?? _delimitStringGlobal)
+                    ? OperandHandler(rightOperand, delimitRightOperand ?? _delimitStringGlobalLevel)
                     : SqlString(rightOperand)
             );
         }
@@ -194,7 +212,7 @@ namespace StringMate.Generators
         public string GreaterThanOrEqual(string leftOperand, Enum rightOperand, bool? delimitLeftOperand = null)
         {
             return string.Concat(
-                OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobal),
+                OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobalLevel),
                 GreaterThanOrEqualSign,
                 EnumValueToString(rightOperand)
             );
@@ -202,8 +220,11 @@ namespace StringMate.Generators
 
         public string GreaterThanOrEqual(string leftOperand, int rightOperand, bool? delimitLeftOperand = null)
         {
+            var originalLeftOperand =
+                OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobalLevel);
+
             return string.Concat(
-                OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobal),
+                LengthOperatorHandler(originalLeftOperand),
                 GreaterThanOrEqualSign,
                 rightOperand);
         }
@@ -213,10 +234,10 @@ namespace StringMate.Generators
             bool? delimitLeftOperand = null, bool? delimitRightOperand = null)
         {
             return string.Concat(
-                OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobal),
+                OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobalLevel),
                 LessThanSign,
                 rightOperandType == SqlOperandType.Column
-                    ? OperandHandler(rightOperand, delimitRightOperand ?? _delimitStringGlobal)
+                    ? OperandHandler(rightOperand, delimitRightOperand ?? _delimitStringGlobalLevel)
                     : SqlString(rightOperand)
             );
         }
@@ -225,7 +246,7 @@ namespace StringMate.Generators
         public string LessThan(string leftOperand, Enum rightOperand, bool? delimitLeftOperand = null)
         {
             return string.Concat(
-                OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobal),
+                OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobalLevel),
                 LessThanSign,
                 EnumValueToString(rightOperand)
             );
@@ -233,7 +254,12 @@ namespace StringMate.Generators
 
         public string LessThan(string leftOperand, int rightOperand, bool? delimitLeftOperand = null)
         {
-            return string.Concat(OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobal), LessThanSign,
+            var originalLeftOperand =
+                OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobalLevel);
+
+            return string.Concat(
+                LengthOperatorHandler(originalLeftOperand),
+                LessThanSign,
                 rightOperand);
         }
 
@@ -242,10 +268,10 @@ namespace StringMate.Generators
             bool? delimitLeftOperand = null, bool? delimitRightOperand = null)
         {
             return string.Concat(
-                OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobal),
+                OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobalLevel),
                 LessThanOrEqualSign,
                 rightOperandType == SqlOperandType.Column
-                    ? OperandHandler(rightOperand, delimitRightOperand ?? _delimitStringGlobal)
+                    ? OperandHandler(rightOperand, delimitRightOperand ?? _delimitStringGlobalLevel)
                     : SqlString(rightOperand)
             );
         }
@@ -253,7 +279,7 @@ namespace StringMate.Generators
         public string LessThanOrEqual(string leftOperand, Enum rightOperand, bool? delimitLeftOperand = null)
         {
             return string.Concat(
-                OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobal),
+                OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobalLevel),
                 LessThanOrEqualSign,
                 EnumValueToString(rightOperand)
             );
@@ -261,8 +287,11 @@ namespace StringMate.Generators
 
         public string LessThanOrEqual(string leftOperand, int rightOperand, bool? delimitLeftOperand = null)
         {
+            var originalLeftOperand =
+                OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobalLevel);
+
             return string.Concat(
-                OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobal),
+                LengthOperatorHandler(originalLeftOperand),
                 LessThanOrEqualSign,
                 rightOperand);
         }
@@ -271,7 +300,7 @@ namespace StringMate.Generators
         public string Between(string columnName, string leftOperand,
             string rightOperand, bool? delimitColumnName = null)
         {
-            return string.Concat(OperandHandler(columnName, delimitColumnName ?? _delimitStringGlobal),
+            return string.Concat(OperandHandler(columnName, delimitColumnName ?? _delimitStringGlobalLevel),
                 BetweenSign, SqlString(leftOperand), AndSign, SqlString(rightOperand));
         }
 
@@ -280,21 +309,21 @@ namespace StringMate.Generators
             int rightOperand, bool? delimitColumnName = null)
         {
             return string.Concat(
-                OperandHandler(columnName, delimitColumnName ?? _delimitStringGlobal),
+                OperandHandler(columnName, delimitColumnName ?? _delimitStringGlobalLevel),
                 BetweenSign, leftOperand, AndSign, rightOperand);
         }
 
         public string Between(string columnName, double leftOperand,
             double rightOperand, bool? delimitColumnName = null)
         {
-            return string.Concat(OperandHandler(columnName, delimitColumnName ?? _delimitStringGlobal),
+            return string.Concat(OperandHandler(columnName, delimitColumnName ?? _delimitStringGlobalLevel),
                 BetweenSign, leftOperand, AndSign, rightOperand);
         }
 
         public string NotBetween(string columnName, string leftOperand,
             string rightOperand, bool? delimitColumnName = null)
         {
-            return string.Concat(OperandHandler(columnName, delimitColumnName ?? _delimitStringGlobal),
+            return string.Concat(OperandHandler(columnName, delimitColumnName ?? _delimitStringGlobalLevel),
                 NotBetweenSign, SqlString(leftOperand), AndSign, SqlString(rightOperand));
         }
 
@@ -302,15 +331,26 @@ namespace StringMate.Generators
         public string NotBetween(string columnName, int leftOperand,
             int rightOperand, bool? delimitColumnName = null)
         {
-            return string.Concat(OperandHandler(columnName, delimitColumnName ?? _delimitStringGlobal),
+            return string.Concat(OperandHandler(columnName, delimitColumnName ?? _delimitStringGlobalLevel),
                 NotBetweenSign, leftOperand, AndSign, rightOperand);
         }
 
         public string NotBetween(string columnName, double leftOperand,
             double rightOperand, bool? delimitColumnName = null)
         {
-            return string.Concat(OperandHandler(columnName, delimitColumnName ?? _delimitStringGlobal),
+            return string.Concat(OperandHandler(columnName, delimitColumnName ?? _delimitStringGlobalLevel),
                 NotBetweenSign, leftOperand, AndSign, rightOperand);
+        }
+
+        private string LengthOperatorHandler(string data)
+        {
+            return _rdbms switch
+            {
+                RDBMS.SqlServer => $"LEN({data})",
+                RDBMS.PostgreSql => $"length({data})",
+                RDBMS.MySql => $"CHAR_LENGTH({data})",
+                _ => data
+            };
         }
 
 
@@ -348,7 +388,7 @@ namespace StringMate.Generators
                     builder.Append(", ");
                 }
 
-                if (logic is not null)
+                if (logic != null)
                 {
                     builder.Append(logic(item));
                 }
@@ -369,11 +409,11 @@ namespace StringMate.Generators
         private static string SqlString(string text) => $"\'{text}\'";
 
         private string DelimitString(string text) =>
-            _relationalDatabase switch
+            _rdbms switch
             {
-                RelationalDatabase.PostgreSql => $"\"{text}\"",
-                RelationalDatabase.MySql => $"`{text}`",
-                RelationalDatabase.SqlServer => $"[{text}]",
+                RDBMS.PostgreSql => $"\"{text}\"",
+                RDBMS.MySql => $"`{text}`",
+                RDBMS.SqlServer => $"[{text}]",
                 _ => text
             };
     }

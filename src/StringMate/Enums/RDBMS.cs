@@ -1,6 +1,7 @@
 namespace StringMate.Enums
 {
-    public enum RelationalDatabase : byte
+    // ReSharper disable once InconsistentNaming
+    public enum RDBMS : byte
     {
         PostgreSql = 1,
         MySql = 2,

@@ -1,4 +1,4 @@
-`StringMate` offers a collection of valuable classes designed for working with the C# `string` type.
+`StringMate` offers a collection of useful classes designed for working with the C# `string` type.
 
 - `StringValidation` is a static class which contains all the validation methods.
 - Since it is a Static class, garbage collection won't be an issue.

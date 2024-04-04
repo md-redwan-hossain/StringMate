@@ -1,22 +1,22 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFrameworks>net5.0;net6.0;net7.0;net8.0</TargetFrameworks>
+        <TargetFrameworks>netstandard2.1;net5.0;net6.0;net7.0;net8.0</TargetFrameworks>
         <Nullable>enable</Nullable>
         <Title>StringMate</Title>
         <Authors>Md. Redwan Hossain</Authors>
         <Copyright>Copyright (c) Md. Redwan Hossain</Copyright>
-        <Description>`StringMate` offers a collection of valuable classes designed for working with the C# `string` type.</Description>
+        <Description>StringMate offers a collection of useful classes designed for working with the C# string type.</Description>
         <PackageProjectUrl>https://github.com/md-redwan-hossain/StringMate</PackageProjectUrl>
         <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
         <RepositoryUrl>https://github.com/md-redwan-hossain/StringMate</RepositoryUrl>
-        <Version>0.0.7</Version>
+        <Version>0.0.10</Version>
         <PackageIcon>logo.png</PackageIcon>
-        <PackageTags>validation validation-library validator string-validation</PackageTags>
+        <PackageTags>validation validation-library validator string-validation string-utility utility</PackageTags>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <NoWarn>CS1591</NoWarn>
         <DocumentationFile Condition="'$(Configuration)'=='Release'">bin\$(Configuration)\$(TargetFramework)\StringMate.xml</DocumentationFile>
-        <PackageReleaseNotes>fixed parameter typo in SqlCheckConstrainGenerator class</PackageReleaseNotes>
+        <PackageReleaseNotes></PackageReleaseNotes>
     </PropertyGroup>
 
     <ItemGroup>
@@ -34,5 +34,10 @@
             <Link>README.md</Link>
             <PackagePath>.</PackagePath>
         </None>
+    </ItemGroup>
+
+
+    <ItemGroup>
+      <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
     </ItemGroup>
 </Project>
