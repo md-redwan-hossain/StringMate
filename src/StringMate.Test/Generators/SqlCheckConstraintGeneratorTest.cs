@@ -41,20 +41,20 @@ public class SqlCheckConstraintGeneratorTest
         testSql.ShouldBe(sql);
     }
 
-    
+
     [Fact]
     public void GreaterThanCheck_Int_As_Value()
     {
-        var cc = new SqlCheckConstrainGenerator(RDBMS.MySql);
+        var cc = new SqlCheckConstrainGenerator(RDBMS.MySql, StringCase.SnakeCase);
         const string sql = "`sell_price` > 100";
-        var testSql = cc.GreaterThan("sell_price", 100, SqlDataType.Int);
+        var testSql = cc.GreaterThan("SellPrice", 100, SqlDataType.Int);
         testSql.ShouldBe(sql);
     }
-    
+
     [Fact]
     public void GreaterThanCheck_String_As_Column_DelimitLeftOperand()
     {
-        var cc = new SqlCheckConstrainGenerator(RDBMS.MySql);
+        var cc = new SqlCheckConstrainGenerator(RDBMS.MySql, StringCase.SnakeCase);
         const string sql = "sell_price > `buy_price`";
         var testSql = cc.GreaterThan("sell_price", "buy_price", SqlOperandType.Column, delimitLeftOperand: false);
         testSql.ShouldBe(sql);

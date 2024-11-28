@@ -1,25 +1,30 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Humanizer;
 using StringMate.Enums;
 
 namespace StringMate.Generators
 {
     /// <summary>
-    /// <c>SqlCheckConstrainGenerator</c> is an utility class for generating raw sql code for check-constrains in a type-safe manner.
+    /// <c>SqlCheckConstrainGenerator</c> is a utility class for generating raw sql code for check-constrains in a type-safe manner.
     /// It can be useful with Entity Framework Core since it doesn't have strongly-typed check-constrain support and requires raw sql code.
     /// </summary>
     public class SqlCheckConstrainGenerator
     {
         private readonly bool _delimitStringGlobalLevel;
+        private readonly StringCase _stringCase;
         private readonly RDBMS _rdbms;
 
 
         /// <param name="rdbms">determines the delimitStringGlobalLevel symbols based on database.</param>
+        /// <param name="stringCase">denotes the case of the generated SQL</param>
         /// <param name="delimitStringGlobalLevel">any method parameter of this class which is related to string delimitation will override <c>delimitStringGlobal</c>. By default, <c>delimitStringGlobal</c> is set to true. </param>
-        public SqlCheckConstrainGenerator(RDBMS rdbms, bool delimitStringGlobalLevel = true)
+        public SqlCheckConstrainGenerator(RDBMS rdbms, StringCase stringCase = StringCase.SameAsInput,
+            bool delimitStringGlobalLevel = true)
         {
             _rdbms = rdbms;
+            _stringCase = stringCase;
             _delimitStringGlobalLevel = delimitStringGlobalLevel;
         }
 
@@ -52,13 +57,31 @@ namespace StringMate.Generators
             return WrapWithParentheses(string.Concat(leftOperand, NotSign, rightOperand));
         }
 
+        private (string left, string right) TransformCase(string left, string right)
+        {
+            if (_stringCase == StringCase.SnakeCase)
+            {
+                return (left.Underscore(), right.Underscore());
+            }
+
+            return (right, left);
+        }
+
+        private string TransformCase(string columnOrOperand)
+        {
+            if (_stringCase == StringCase.SnakeCase)
+            {
+                return (columnOrOperand.Underscore());
+            }
+
+            return columnOrOperand;
+        }
 
         public string In(string leftOperand, ICollection<int> rightOperands, bool? delimitLeftOperand = null)
         {
             return string.Concat(OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobalLevel), InSign,
                 WrapWithParentheses(CommaSeparatedCollectionData(rightOperands)));
         }
-
 
         public string In(string leftOperand, ICollection<string> rightOperands, bool? delimitLeftOperand = null)
         {
@@ -71,7 +94,6 @@ namespace StringMate.Generators
             return string.Concat(OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobalLevel), InSign,
                 WrapWithParentheses(CommaSeparatedCollectionData(rightOperands)));
         }
-
 
         public string NotIn(string leftOperand, ICollection<int> rightOperands, bool? delimitLeftOperand = null)
         {
@@ -98,27 +120,33 @@ namespace StringMate.Generators
         public string NotEqualTo(string leftOperand, string rightOperand, SqlOperandType rightOperandType,
             bool? delimitLeftOperand = null, bool? delimitRightOperand = null)
         {
+            var transformed = TransformCase(leftOperand, rightOperand);
+
             return string.Concat(
-                OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobalLevel),
+                OperandHandler(transformed.left, delimitLeftOperand ?? _delimitStringGlobalLevel),
                 NotEqualSign,
                 rightOperandType == SqlOperandType.Column
-                    ? OperandHandler(rightOperand, delimitRightOperand ?? _delimitStringGlobalLevel)
-                    : SqlString(rightOperand)
+                    ? OperandHandler(transformed.right, delimitRightOperand ?? _delimitStringGlobalLevel)
+                    : SqlString(transformed.right)
             );
         }
 
 
         public string NotEqualTo(string leftOperand, Enum rightOperand, bool? delimitLeftOperand = null)
         {
-            return string.Concat(OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobalLevel),
+            var transformed = TransformCase(leftOperand, EnumValueToString(rightOperand));
+
+            return string.Concat(OperandHandler(transformed.left, delimitLeftOperand ?? _delimitStringGlobalLevel),
                 NotEqualSign,
-                EnumValueToString(rightOperand));
+                transformed.right);
         }
 
         public string NotEqualTo(string leftOperand, int rightOperand, SqlDataType leftOperandSqlDataType,
             bool? delimitLeftOperand = null)
         {
-            var leftOperandWithLogic = OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobalLevel);
+            var transformed = TransformCase(leftOperand);
+
+            var leftOperandWithLogic = OperandHandler(transformed, delimitLeftOperand ?? _delimitStringGlobalLevel);
             if (leftOperandSqlDataType == SqlDataType.VarChar || leftOperandSqlDataType == SqlDataType.Text)
             {
                 leftOperandWithLogic = LengthOperatorHandler(leftOperandWithLogic);
@@ -131,12 +159,13 @@ namespace StringMate.Generators
         public string EqualTo(string leftOperand, string rightOperand, SqlOperandType rightOperandType,
             bool? delimitLeftOperand = null, bool? delimitRightOperand = null)
         {
+            var transformed = TransformCase(leftOperand, rightOperand);
             return string.Concat(
-                OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobalLevel),
+                OperandHandler(transformed.left, delimitLeftOperand ?? _delimitStringGlobalLevel),
                 EqualSign,
                 rightOperandType == SqlOperandType.Column
-                    ? OperandHandler(rightOperand, delimitRightOperand ?? _delimitStringGlobalLevel)
-                    : SqlString(rightOperand)
+                    ? OperandHandler(transformed.right, delimitRightOperand ?? _delimitStringGlobalLevel)
+                    : SqlString(transformed.right)
             );
         }
 
@@ -144,7 +173,8 @@ namespace StringMate.Generators
         public string EqualTo(string leftOperand, int rightOperand, SqlDataType leftOperandSqlDataType,
             bool? delimitLeftOperand = null)
         {
-            var leftOperandWithLogic = OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobalLevel);
+            var transformed = TransformCase(leftOperand);
+            var leftOperandWithLogic = OperandHandler(transformed, delimitLeftOperand ?? _delimitStringGlobalLevel);
             if (leftOperandSqlDataType == SqlDataType.VarChar || leftOperandSqlDataType == SqlDataType.Text)
             {
                 leftOperandWithLogic = LengthOperatorHandler(leftOperandWithLogic);
@@ -156,10 +186,12 @@ namespace StringMate.Generators
 
         public string EqualTo(string leftOperand, Enum rightOperand, bool? delimitLeftOperand = null)
         {
+            var transformed = TransformCase(leftOperand, EnumValueToString(rightOperand));
+
             return string.Concat(
-                OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobalLevel),
+                OperandHandler(transformed.left, delimitLeftOperand ?? _delimitStringGlobalLevel),
                 EqualSign,
-                EnumValueToString(rightOperand)
+                transformed.right
             );
         }
 
@@ -167,30 +199,33 @@ namespace StringMate.Generators
         public string GreaterThan(string leftOperand, string rightOperand, SqlOperandType rightOperandType,
             bool? delimitLeftOperand = null, bool? delimitRightOperand = null)
         {
+            var transformed = TransformCase(leftOperand, rightOperand);
+
             return string.Concat(
-                OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobalLevel),
+                OperandHandler(transformed.left, delimitLeftOperand ?? _delimitStringGlobalLevel),
                 GreaterThanSign,
                 rightOperandType == SqlOperandType.Column
                     ? OperandHandler(rightOperand, delimitRightOperand ?? _delimitStringGlobalLevel)
-                    : SqlString(rightOperand)
+                    : SqlString(transformed.right)
             );
         }
 
 
-        public string GreaterThan(string leftOperand, Enum rightOperand,
-            bool? delimitLeftOperand = null)
+        public string GreaterThan(string leftOperand, Enum rightOperand, bool? delimitLeftOperand = null)
         {
+            var transformed = TransformCase(leftOperand, EnumValueToString(rightOperand));
             return string.Concat(
-                OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobalLevel),
+                OperandHandler(transformed.left, delimitLeftOperand ?? _delimitStringGlobalLevel),
                 GreaterThanSign,
-                EnumValueToString(rightOperand)
+                transformed.right
             );
         }
 
         public string GreaterThan(string leftOperand, int rightOperand, SqlDataType leftOperandSqlDataType,
             bool? delimitLeftOperand = null)
         {
-            var leftOperandWithLogic = OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobalLevel);
+            var transformed = TransformCase(leftOperand);
+            var leftOperandWithLogic = OperandHandler(transformed, delimitLeftOperand ?? _delimitStringGlobalLevel);
             if (leftOperandSqlDataType == SqlDataType.VarChar || leftOperandSqlDataType == SqlDataType.Text)
             {
                 leftOperandWithLogic = LengthOperatorHandler(leftOperandWithLogic);
@@ -203,29 +238,32 @@ namespace StringMate.Generators
         public string GreaterThanOrEqual(string leftOperand, string rightOperand, SqlOperandType rightOperandType,
             bool? delimitLeftOperand = null, bool? delimitRightOperand = null)
         {
+            var transformed = TransformCase(leftOperand, rightOperand);
             return string.Concat(
-                OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobalLevel),
+                OperandHandler(transformed.left, delimitLeftOperand ?? _delimitStringGlobalLevel),
                 GreaterThanOrEqualSign,
                 rightOperandType == SqlOperandType.Column
-                    ? OperandHandler(rightOperand, delimitRightOperand ?? _delimitStringGlobalLevel)
-                    : SqlString(rightOperand)
+                    ? OperandHandler(transformed.right, delimitRightOperand ?? _delimitStringGlobalLevel)
+                    : SqlString(transformed.right)
             );
         }
 
 
         public string GreaterThanOrEqual(string leftOperand, Enum rightOperand, bool? delimitLeftOperand = null)
         {
+            var transformed = TransformCase(leftOperand, EnumValueToString(rightOperand));
             return string.Concat(
-                OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobalLevel),
+                OperandHandler(transformed.left, delimitLeftOperand ?? _delimitStringGlobalLevel),
                 GreaterThanOrEqualSign,
-                EnumValueToString(rightOperand)
+                transformed.right
             );
         }
 
         public string GreaterThanOrEqual(string leftOperand, int rightOperand, SqlDataType leftOperandSqlDataType,
             bool? delimitLeftOperand = null)
         {
-            var leftOperandWithLogic = OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobalLevel);
+            var transformed = TransformCase(leftOperand);
+            var leftOperandWithLogic = OperandHandler(transformed, delimitLeftOperand ?? _delimitStringGlobalLevel);
             if (leftOperandSqlDataType == SqlDataType.VarChar || leftOperandSqlDataType == SqlDataType.Text)
             {
                 leftOperandWithLogic = LengthOperatorHandler(leftOperandWithLogic);
@@ -238,29 +276,32 @@ namespace StringMate.Generators
         public string LessThan(string leftOperand, string rightOperand, SqlOperandType rightOperandType,
             bool? delimitLeftOperand = null, bool? delimitRightOperand = null)
         {
+            var transformed = TransformCase(leftOperand, rightOperand);
             return string.Concat(
-                OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobalLevel),
+                OperandHandler(transformed.left, delimitLeftOperand ?? _delimitStringGlobalLevel),
                 LessThanSign,
                 rightOperandType == SqlOperandType.Column
-                    ? OperandHandler(rightOperand, delimitRightOperand ?? _delimitStringGlobalLevel)
-                    : SqlString(rightOperand)
+                    ? OperandHandler(transformed.right, delimitRightOperand ?? _delimitStringGlobalLevel)
+                    : SqlString(transformed.right)
             );
         }
 
 
         public string LessThan(string leftOperand, Enum rightOperand, bool? delimitLeftOperand = null)
         {
+            var transformed = TransformCase(leftOperand, EnumValueToString(rightOperand));
             return string.Concat(
-                OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobalLevel),
+                OperandHandler(transformed.left, delimitLeftOperand ?? _delimitStringGlobalLevel),
                 LessThanSign,
-                EnumValueToString(rightOperand)
+                transformed.right
             );
         }
 
         public string LessThan(string leftOperand, int rightOperand, SqlDataType leftOperandSqlDataType,
             bool? delimitLeftOperand = null)
         {
-            var leftOperandWithLogic = OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobalLevel);
+            var transformed = TransformCase(leftOperand);
+            var leftOperandWithLogic = OperandHandler(transformed, delimitLeftOperand ?? _delimitStringGlobalLevel);
             if (leftOperandSqlDataType == SqlDataType.VarChar || leftOperandSqlDataType == SqlDataType.Text)
             {
                 leftOperandWithLogic = LengthOperatorHandler(leftOperandWithLogic);
@@ -273,28 +314,31 @@ namespace StringMate.Generators
         public string LessThanOrEqual(string leftOperand, string rightOperand, SqlOperandType rightOperandType,
             bool? delimitLeftOperand = null, bool? delimitRightOperand = null)
         {
+            var transformed = TransformCase(leftOperand, rightOperand);
             return string.Concat(
-                OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobalLevel),
+                OperandHandler(transformed.left, delimitLeftOperand ?? _delimitStringGlobalLevel),
                 LessThanOrEqualSign,
                 rightOperandType == SqlOperandType.Column
-                    ? OperandHandler(rightOperand, delimitRightOperand ?? _delimitStringGlobalLevel)
-                    : SqlString(rightOperand)
+                    ? OperandHandler(transformed.right, delimitRightOperand ?? _delimitStringGlobalLevel)
+                    : SqlString(transformed.right)
             );
         }
 
         public string LessThanOrEqual(string leftOperand, Enum rightOperand, bool? delimitLeftOperand = null)
         {
+            var transformed = TransformCase(leftOperand, EnumValueToString(rightOperand));
             return string.Concat(
-                OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobalLevel),
+                OperandHandler(transformed.left, delimitLeftOperand ?? _delimitStringGlobalLevel),
                 LessThanOrEqualSign,
-                EnumValueToString(rightOperand)
+                transformed.right
             );
         }
 
         public string LessThanOrEqual(string leftOperand, int rightOperand, SqlDataType leftOperandSqlDataType,
             bool? delimitLeftOperand = null)
         {
-            var leftOperandWithLogic = OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobalLevel);
+            var transformed = TransformCase(leftOperand);
+            var leftOperandWithLogic = OperandHandler(transformed, delimitLeftOperand ?? _delimitStringGlobalLevel);
             if (leftOperandSqlDataType == SqlDataType.VarChar || leftOperandSqlDataType == SqlDataType.Text)
             {
                 leftOperandWithLogic = LengthOperatorHandler(leftOperandWithLogic);
@@ -315,22 +359,25 @@ namespace StringMate.Generators
         public string Between(string columnName, int leftOperand,
             int rightOperand, bool? delimitColumnName = null)
         {
+            var transformed = TransformCase(columnName);
             return string.Concat(
-                OperandHandler(columnName, delimitColumnName ?? _delimitStringGlobalLevel),
+                OperandHandler(transformed, delimitColumnName ?? _delimitStringGlobalLevel),
                 BetweenSign, leftOperand, AndSign, rightOperand);
         }
 
         public string Between(string columnName, double leftOperand,
             double rightOperand, bool? delimitColumnName = null)
         {
-            return string.Concat(OperandHandler(columnName, delimitColumnName ?? _delimitStringGlobalLevel),
+            var transformed = TransformCase(columnName);
+            return string.Concat(OperandHandler(transformed, delimitColumnName ?? _delimitStringGlobalLevel),
                 BetweenSign, leftOperand, AndSign, rightOperand);
         }
 
         public string NotBetween(string columnName, string leftOperand,
             string rightOperand, bool? delimitColumnName = null)
         {
-            return string.Concat(OperandHandler(columnName, delimitColumnName ?? _delimitStringGlobalLevel),
+            var transformed = TransformCase(columnName);
+            return string.Concat(OperandHandler(transformed, delimitColumnName ?? _delimitStringGlobalLevel),
                 NotBetweenSign, SqlString(leftOperand), AndSign, SqlString(rightOperand));
         }
 
@@ -338,14 +385,16 @@ namespace StringMate.Generators
         public string NotBetween(string columnName, int leftOperand,
             int rightOperand, bool? delimitColumnName = null)
         {
-            return string.Concat(OperandHandler(columnName, delimitColumnName ?? _delimitStringGlobalLevel),
+            var transformed = TransformCase(columnName);
+            return string.Concat(OperandHandler(transformed, delimitColumnName ?? _delimitStringGlobalLevel),
                 NotBetweenSign, leftOperand, AndSign, rightOperand);
         }
 
         public string NotBetween(string columnName, double leftOperand,
             double rightOperand, bool? delimitColumnName = null)
         {
-            return string.Concat(OperandHandler(columnName, delimitColumnName ?? _delimitStringGlobalLevel),
+            var transformed = TransformCase(columnName);
+            return string.Concat(OperandHandler(transformed, delimitColumnName ?? _delimitStringGlobalLevel),
                 NotBetweenSign, leftOperand, AndSign, rightOperand);
         }
 
