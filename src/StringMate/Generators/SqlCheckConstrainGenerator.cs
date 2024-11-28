@@ -79,25 +79,29 @@ namespace StringMate.Generators
 
         public string In(string leftOperand, ICollection<int> rightOperands, bool? delimitLeftOperand = null)
         {
-            return string.Concat(OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobalLevel), InSign,
+            var transformed = TransformCase(leftOperand);
+            return string.Concat(OperandHandler(transformed, delimitLeftOperand ?? _delimitStringGlobalLevel), InSign,
                 WrapWithParentheses(CommaSeparatedCollectionData(rightOperands)));
         }
 
         public string In(string leftOperand, ICollection<string> rightOperands, bool? delimitLeftOperand = null)
         {
-            return string.Concat(OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobalLevel), InSign,
+            var transformed = TransformCase(leftOperand);
+            return string.Concat(OperandHandler(transformed, delimitLeftOperand ?? _delimitStringGlobalLevel), InSign,
                 WrapWithParentheses(CommaSeparatedCollectionData(rightOperands)));
         }
 
         public string In(string leftOperand, ICollection<Enum> rightOperands, bool? delimitLeftOperand = null)
         {
-            return string.Concat(OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobalLevel), InSign,
+            var transformed = TransformCase(leftOperand);
+            return string.Concat(OperandHandler(transformed, delimitLeftOperand ?? _delimitStringGlobalLevel), InSign,
                 WrapWithParentheses(CommaSeparatedCollectionData(rightOperands)));
         }
 
         public string NotIn(string leftOperand, ICollection<int> rightOperands, bool? delimitLeftOperand = null)
         {
-            return string.Concat(OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobalLevel),
+            var transformed = TransformCase(leftOperand);
+            return string.Concat(OperandHandler(transformed, delimitLeftOperand ?? _delimitStringGlobalLevel),
                 NotInSign,
                 WrapWithParentheses(CommaSeparatedCollectionData(rightOperands)));
         }
@@ -105,14 +109,16 @@ namespace StringMate.Generators
 
         public string NotIn(string leftOperand, ICollection<string> rightOperands, bool? delimitLeftOperand = null)
         {
-            return string.Concat(OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobalLevel),
+            var transformed = TransformCase(leftOperand);
+            return string.Concat(OperandHandler(transformed, delimitLeftOperand ?? _delimitStringGlobalLevel),
                 NotInSign,
                 WrapWithParentheses(CommaSeparatedCollectionData(rightOperands)));
         }
 
         public string NotIn(string leftOperand, ICollection<Enum> rightOperands, bool? delimitLeftOperand = null)
         {
-            return string.Concat(OperandHandler(leftOperand, delimitLeftOperand ?? _delimitStringGlobalLevel),
+            var transformed = TransformCase(leftOperand);
+            return string.Concat(OperandHandler(transformed, delimitLeftOperand ?? _delimitStringGlobalLevel),
                 NotInSign,
                 WrapWithParentheses(CommaSeparatedCollectionData(rightOperands)));
         }
