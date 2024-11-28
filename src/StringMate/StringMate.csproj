@@ -10,7 +10,7 @@
         <PackageProjectUrl>https://github.com/md-redwan-hossain/StringMate</PackageProjectUrl>
         <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
         <RepositoryUrl>https://github.com/md-redwan-hossain/StringMate</RepositoryUrl>
-        <Version>0.0.11</Version>
+        <Version>0.0.12</Version>
         <PackageIcon>logo.png</PackageIcon>
         <PackageTags>validation validation-library validator string-validation string-utility utility</PackageTags>
         <PackageReadmeFile>README.md</PackageReadmeFile>
