@@ -470,13 +470,15 @@ namespace StringMate.Generators
 
         private static string SqlString(string text) => $"\'{text}\'";
 
-        private string DelimitString(string text) =>
-            _rdbms switch
+        private string DelimitString(string text)
+        {
+            return _rdbms switch
             {
                 RDBMS.PostgreSql => $"\"{text}\"",
                 RDBMS.MySql => $"`{text}`",
                 RDBMS.SqlServer => $"[{text}]",
                 _ => text
             };
+        }
     }
 }

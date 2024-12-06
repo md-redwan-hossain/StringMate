@@ -5,11 +5,11 @@ namespace StringMate.Validators.ValidationRules
 {
     internal static class StrongPasswordValidation
     {
-        private static readonly Regex UpperCaseRegex = new Regex("^[A-Z]$");
-        private static readonly Regex LowerCaseRegex = new Regex("^[a-z]$");
-        private static readonly Regex NumberRegex = new Regex("^[0-9]$");
+        private static readonly Regex UpperCaseRegex = new("^[A-Z]$");
+        private static readonly Regex LowerCaseRegex = new("^[a-z]$");
+        private static readonly Regex NumberRegex = new("^[0-9]$");
 
-        private static readonly Regex SymbolRegex = new Regex(@"^[-#!$@£%^&*()_+|~=`{}\[\]:""';<>?,.\/ ]$");
+        private static readonly Regex SymbolRegex = new(@"^[-#!$@£%^&*()_+|~=`{}\[\]:""';<>?,.\/ ]$");
 
 
         private static Dictionary<char, int> CountChars(string text)

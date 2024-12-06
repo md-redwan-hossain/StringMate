@@ -55,6 +55,6 @@ namespace StringMate.Validators.ValidationRules
             };
         }
         
-        private static Regex RegexMaker(byte size) => new Regex($"^[a-fA-F0-9]{{{size}}}$");
+        private static Regex RegexMaker(byte size) => new($"^[a-fA-F0-9]{{{size}}}$");
     }
 }
