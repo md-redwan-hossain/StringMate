@@ -37,6 +37,9 @@ namespace StringMate.Generators
         private const string OrSign = " OR ";
         private const string AndSign = " AND ";
         private const string InSign = " IN ";
+        private const string Is = " IS ";
+        private const string IsNot = " IS NOT ";
+        private const string Null = " NULL ";
         private const string NotSign = " NOT ";
         private const string NotInSign = " NOT IN ";
         private const string BetweenSign = " BETWEEN ";
@@ -153,7 +156,7 @@ namespace StringMate.Generators
             var transformed = TransformCase(leftOperand);
 
             var leftOperandWithLogic = OperandHandler(transformed, delimitLeftOperand ?? _delimitStringGlobalLevel);
-            if (leftOperandSqlDataType == SqlDataType.VarChar || leftOperandSqlDataType == SqlDataType.Text)
+            if (leftOperandSqlDataType is SqlDataType.VarChar or SqlDataType.Text)
             {
                 leftOperandWithLogic = LengthOperatorHandler(leftOperandWithLogic);
             }
@@ -181,7 +184,7 @@ namespace StringMate.Generators
         {
             var transformed = TransformCase(leftOperand);
             var leftOperandWithLogic = OperandHandler(transformed, delimitLeftOperand ?? _delimitStringGlobalLevel);
-            if (leftOperandSqlDataType == SqlDataType.VarChar || leftOperandSqlDataType == SqlDataType.Text)
+            if (leftOperandSqlDataType is SqlDataType.VarChar or SqlDataType.Text)
             {
                 leftOperandWithLogic = LengthOperatorHandler(leftOperandWithLogic);
             }
@@ -232,7 +235,7 @@ namespace StringMate.Generators
         {
             var transformed = TransformCase(leftOperand);
             var leftOperandWithLogic = OperandHandler(transformed, delimitLeftOperand ?? _delimitStringGlobalLevel);
-            if (leftOperandSqlDataType == SqlDataType.VarChar || leftOperandSqlDataType == SqlDataType.Text)
+            if (leftOperandSqlDataType is SqlDataType.VarChar or SqlDataType.Text)
             {
                 leftOperandWithLogic = LengthOperatorHandler(leftOperandWithLogic);
             }
@@ -270,7 +273,7 @@ namespace StringMate.Generators
         {
             var transformed = TransformCase(leftOperand);
             var leftOperandWithLogic = OperandHandler(transformed, delimitLeftOperand ?? _delimitStringGlobalLevel);
-            if (leftOperandSqlDataType == SqlDataType.VarChar || leftOperandSqlDataType == SqlDataType.Text)
+            if (leftOperandSqlDataType is SqlDataType.VarChar or SqlDataType.Text)
             {
                 leftOperandWithLogic = LengthOperatorHandler(leftOperandWithLogic);
             }
@@ -308,7 +311,7 @@ namespace StringMate.Generators
         {
             var transformed = TransformCase(leftOperand);
             var leftOperandWithLogic = OperandHandler(transformed, delimitLeftOperand ?? _delimitStringGlobalLevel);
-            if (leftOperandSqlDataType == SqlDataType.VarChar || leftOperandSqlDataType == SqlDataType.Text)
+            if (leftOperandSqlDataType is SqlDataType.VarChar or SqlDataType.Text)
             {
                 leftOperandWithLogic = LengthOperatorHandler(leftOperandWithLogic);
             }
@@ -345,7 +348,7 @@ namespace StringMate.Generators
         {
             var transformed = TransformCase(leftOperand);
             var leftOperandWithLogic = OperandHandler(transformed, delimitLeftOperand ?? _delimitStringGlobalLevel);
-            if (leftOperandSqlDataType == SqlDataType.VarChar || leftOperandSqlDataType == SqlDataType.Text)
+            if (leftOperandSqlDataType is SqlDataType.VarChar or SqlDataType.Text)
             {
                 leftOperandWithLogic = LengthOperatorHandler(leftOperandWithLogic);
             }
@@ -402,6 +405,20 @@ namespace StringMate.Generators
             var transformed = TransformCase(columnName);
             return string.Concat(OperandHandler(transformed, delimitColumnName ?? _delimitStringGlobalLevel),
                 NotBetweenSign, leftOperand, AndSign, rightOperand);
+        }
+
+        public string IsNull(string leftOperand, bool? delimitLeftOperand = null)
+        {
+            var transformed = TransformCase(leftOperand);
+            var leftOperandWithLogic = OperandHandler(transformed, delimitLeftOperand ?? _delimitStringGlobalLevel);
+            return NormalizeAndTrimWhiteSpace(string.Concat(leftOperandWithLogic, Is, Null));
+        }
+
+        public string IsNotNull(string leftOperand, bool? delimitLeftOperand = null)
+        {
+            var transformed = TransformCase(leftOperand);
+            var leftOperandWithLogic = OperandHandler(transformed, delimitLeftOperand ?? _delimitStringGlobalLevel);
+            return NormalizeAndTrimWhiteSpace(string.Concat(leftOperandWithLogic, IsNot, Null));
         }
 
         private string LengthOperatorHandler(string data)
@@ -479,6 +496,39 @@ namespace StringMate.Generators
                 RDBMS.SqlServer => $"[{text}]",
                 _ => text
             };
+        }
+
+
+        private static string NormalizeAndTrimWhiteSpace(string input)
+        {
+            var inputSb = new StringBuilder(input);
+            
+            if (inputSb.Length == 0)
+            {
+                return input;
+            }
+
+            var writeIndex = 0;
+            var skipped = false;
+
+            for (var readIndex = 0; readIndex < inputSb.Length; readIndex++)
+            {
+                var c = inputSb[readIndex];
+                if (char.IsWhiteSpace(c))
+                {
+                    if (skipped) continue;
+                    inputSb[writeIndex++] = ' ';
+                    skipped = true;
+                }
+                else
+                {
+                    skipped = false;
+                    inputSb[writeIndex++] = c;
+                }
+            }
+
+            inputSb.Length = writeIndex;
+            return inputSb.ToString().Trim();
         }
     }
 }
