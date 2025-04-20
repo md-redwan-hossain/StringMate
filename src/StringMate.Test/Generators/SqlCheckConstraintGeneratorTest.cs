@@ -6,6 +6,33 @@ namespace StringMate.Test.Generators;
 public class SqlCheckConstraintGeneratorTest
 {
     [Fact]
+    public void TrueStringCheck_String()
+    {
+        var cc = new SqlCheckConstrainGenerator(RDBMS.PostgreSql, delimitStringGlobalLevel: false);
+        var sql = $"address = {bool.TrueString}";
+        var testSql = cc.EqualTo("address", true);
+        testSql.ShouldBe(sql);
+    }
+    
+    [Fact]
+    public void FalseStringCheck_String()
+    {
+        var cc = new SqlCheckConstrainGenerator(RDBMS.PostgreSql, delimitStringGlobalLevel: false);
+        var sql = $"address = {bool.FalseString}";
+        var testSql = cc.EqualTo("address", false);
+        testSql.ShouldBe(sql);
+    }
+    
+    [Fact]
+    public void NotTrueCheck_String()
+    {
+        var cc = new SqlCheckConstrainGenerator(RDBMS.PostgreSql, delimitStringGlobalLevel: false);
+        var sql = $"address <> {bool.TrueString}";
+        var testSql = cc.NotEqualTo("address", true);
+        testSql.ShouldBe(sql);
+    }
+
+    [Fact]
     public void IsNullCheck_String()
     {
         var cc = new SqlCheckConstrainGenerator(RDBMS.PostgreSql, delimitStringGlobalLevel: false);
@@ -13,7 +40,7 @@ public class SqlCheckConstraintGeneratorTest
         var testSql = cc.IsNull("address");
         testSql.ShouldBe(sql);
     }
-    
+
     [Fact]
     public void IsNotNullCheck_String()
     {

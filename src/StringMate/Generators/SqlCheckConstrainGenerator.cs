@@ -164,6 +164,28 @@ namespace StringMate.Generators
             return string.Concat(leftOperandWithLogic, NotEqualSign, rightOperand);
         }
 
+        public string NotEqualTo(string leftOperand, bool rightOperand,
+            bool? delimitLeftOperand = null)
+        {
+            var transformed = TransformCase(leftOperand);
+            return string.Concat(
+                OperandHandler(transformed, delimitLeftOperand ?? _delimitStringGlobalLevel),
+                NotEqualSign,
+                rightOperand ? bool.TrueString : bool.FalseString
+            );
+        }
+
+        public string EqualTo(string leftOperand, bool rightOperand,
+            bool? delimitLeftOperand = null)
+        {
+            var transformed = TransformCase(leftOperand);
+            return string.Concat(
+                OperandHandler(transformed, delimitLeftOperand ?? _delimitStringGlobalLevel),
+                EqualSign,
+                rightOperand ? bool.TrueString : bool.FalseString
+            );
+        }
+
 
         public string EqualTo(string leftOperand, string rightOperand, SqlOperandType rightOperandType,
             bool? delimitLeftOperand = null, bool? delimitRightOperand = null)
@@ -502,7 +524,7 @@ namespace StringMate.Generators
         private static string NormalizeAndTrimWhiteSpace(string input)
         {
             var inputSb = new StringBuilder(input);
-            
+
             if (inputSb.Length == 0)
             {
                 return input;
