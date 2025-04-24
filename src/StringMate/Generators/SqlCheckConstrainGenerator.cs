@@ -45,20 +45,58 @@ namespace StringMate.Generators
         private const string BetweenSign = " BETWEEN ";
         private const string NotBetweenSign = " NOT BETWEEN ";
 
-        public string And(string leftOperand, string rightOperand)
+        public string And(string firstOperand, string secondOperand, params string[] otherOperands)
         {
-            return WrapWithParentheses(string.Concat(leftOperand, AndSign, rightOperand));
-        }
+            var sb = new StringBuilder(string.Concat(firstOperand, AndSign, secondOperand));
+            var size = otherOperands.Length;
+            var counter = 0;
 
-        public string Or(string leftOperand, string rightOperand)
-        {
-            return WrapWithParentheses(string.Concat(leftOperand, OrSign, rightOperand));
-        }
+            if (size > 0)
+            {
+                sb.Append(AndSign);
+            }
 
-        public string Not(string leftOperand, string rightOperand)
-        {
-            return WrapWithParentheses(string.Concat(leftOperand, NotSign, rightOperand));
+            foreach (var operand in otherOperands)
+            {
+                sb.Append(operand);
+
+                if (counter >= 1 && counter != size)
+                {
+                    sb.Append(AndSign);
+                }
+
+                counter += 1;
+            }
+
+            return WrapWithParentheses(NormalizeAndTrimWhiteSpace(sb));
         }
+        
+        public string Or(string firstOperand, string secondOperand, params string[] otherOperands)
+        {
+            var sb = new StringBuilder(string.Concat(firstOperand, OrSign, secondOperand));
+            var size = otherOperands.Length;
+            var counter = 0;
+
+            if (size > 0)
+            {
+                sb.Append(OrSign);
+            }
+
+            foreach (var operand in otherOperands)
+            {
+                sb.Append(operand);
+
+                if (counter >= 1 && counter != size)
+                {
+                    sb.Append(OrSign);
+                }
+
+                counter += 1;
+            }
+
+            return WrapWithParentheses(NormalizeAndTrimWhiteSpace(sb));
+        }
+        
 
         private (string left, string right) TransformCase(string left, string right)
         {
@@ -478,7 +516,7 @@ namespace StringMate.Generators
             ICollection<TCollection> collection,
             Func<TCollection, TValue>? logic = null)
         {
-            var builder = new StringBuilder();
+            var sb = new StringBuilder();
             var size = collection.Count;
             var counter = 0;
 
@@ -486,22 +524,22 @@ namespace StringMate.Generators
             {
                 if (counter >= 1 && counter != size)
                 {
-                    builder.Append(", ");
+                    sb.Append(", ");
                 }
 
                 if (logic != null)
                 {
-                    builder.Append(logic(item));
+                    sb.Append(logic(item));
                 }
                 else
                 {
-                    builder.Append(item);
+                    sb.Append(item);
                 }
 
                 counter += 1;
             }
 
-            return builder.ToString();
+            return sb.ToString();
         }
 
 
@@ -520,37 +558,39 @@ namespace StringMate.Generators
             };
         }
 
-
-        private static string NormalizeAndTrimWhiteSpace(string input)
+        private static string NormalizeAndTrimWhiteSpace(StringBuilder input)
         {
-            var inputSb = new StringBuilder(input);
-
-            if (inputSb.Length == 0)
+            if (input.Length == 0)
             {
-                return input;
+                return input.ToString();
             }
 
             var writeIndex = 0;
             var skipped = false;
 
-            for (var readIndex = 0; readIndex < inputSb.Length; readIndex++)
+            for (var readIndex = 0; readIndex < input.Length; readIndex++)
             {
-                var c = inputSb[readIndex];
+                var c = input[readIndex];
                 if (char.IsWhiteSpace(c))
                 {
                     if (skipped) continue;
-                    inputSb[writeIndex++] = ' ';
+                    input[writeIndex++] = ' ';
                     skipped = true;
                 }
                 else
                 {
                     skipped = false;
-                    inputSb[writeIndex++] = c;
+                    input[writeIndex++] = c;
                 }
             }
 
-            inputSb.Length = writeIndex;
-            return inputSb.ToString().Trim();
+            input.Length = writeIndex;
+            return input.ToString().Trim();
+        }
+
+        private static string NormalizeAndTrimWhiteSpace(string input)
+        {
+            return NormalizeAndTrimWhiteSpace(new StringBuilder(input));
         }
     }
 }

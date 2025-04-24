@@ -6,6 +6,36 @@ namespace StringMate.Test.Generators;
 public class SqlCheckConstraintGeneratorTest
 {
     [Fact]
+    public void AndCheckWithParams()
+    {
+        var cc = new SqlCheckConstrainGenerator(RDBMS.PostgreSql, delimitStringGlobalLevel: false);
+        var sql =
+            $"((is_verified = {bool.FalseString} AND phone IS NULL AND otp IS NULL) OR (is_verified = {bool.TrueString} AND phone IS NOT NULL AND otp IS NOT NULL))";
+
+        var testSql = cc.Or(
+            cc.And(cc.EqualTo("is_verified", false), cc.IsNull("phone"), cc.IsNull("otp")),
+            cc.And(cc.EqualTo("is_verified", true), cc.IsNotNull("phone"), cc.IsNotNull("otp"))
+        );
+
+        testSql.ShouldBe(sql);
+    }
+
+    [Fact]
+    public void AndCheckWithoutParams()
+    {
+        var cc = new SqlCheckConstrainGenerator(RDBMS.PostgreSql, delimitStringGlobalLevel: false);
+        var sql =
+            $"((is_verified = {bool.FalseString} AND phone IS NULL) OR (is_verified = {bool.TrueString} AND phone IS NOT NULL))";
+
+        var testSql = cc.Or(
+            cc.And(cc.EqualTo("is_verified", false), cc.IsNull("phone")),
+            cc.And(cc.EqualTo("is_verified", true), cc.IsNotNull("phone"))
+        );
+
+        testSql.ShouldBe(sql);
+    }
+
+    [Fact]
     public void TrueStringCheck_String()
     {
         var cc = new SqlCheckConstrainGenerator(RDBMS.PostgreSql, delimitStringGlobalLevel: false);
@@ -13,7 +43,7 @@ public class SqlCheckConstraintGeneratorTest
         var testSql = cc.EqualTo("address", true);
         testSql.ShouldBe(sql);
     }
-    
+
     [Fact]
     public void FalseStringCheck_String()
     {
@@ -22,7 +52,7 @@ public class SqlCheckConstraintGeneratorTest
         var testSql = cc.EqualTo("address", false);
         testSql.ShouldBe(sql);
     }
-    
+
     [Fact]
     public void NotTrueCheck_String()
     {
